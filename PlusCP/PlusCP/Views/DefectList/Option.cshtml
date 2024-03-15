@@ -1,0 +1,159 @@
+﻿@model PlusCP.Models.DefectList
+@{
+    ViewBag.Title = "Option";
+    Layout = null;
+}
+
+<style>
+    .pad {
+        padding-bottom: 15px;
+        padding: 2px;
+        padding-top: 10px;
+    }
+</style>
+<table class="fullWidth" cellpadding="10" cellspacing="10">
+    @*<tr>
+        <td colspan="4" class="pad">
+            @Html.Action("GetProgramBySite", "Home", new { id = "ProgramID", @name = "ProgramID", area = "" })
+        </td>
+    </tr>*@
+    <tr>
+        <td class="pad">
+
+            <strong>From:</strong>
+            <div class='input-group date' id='dtpFrom'>
+                @Html.TextBoxFor(model => model.fromDt, htmlAttributes: new { @class = "form-control" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </td>
+        <td class="pad">
+            <strong>To:</strong>
+            <div class='input-group date' id='dtpTo'>
+                @Html.TextBoxFor(model => model.toDt, htmlAttributes: new { @class = "form-control" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </td>
+
+    </tr>
+    @*<tr>
+            <td colspan="4" class="pad">
+                @Html.LabelFor(model => model.partNo, new { @class = "col-4 col-form-label" })
+                <input type="text" class="form-control" id="partNo" name="partNo" autofocus
+                       onkeydown="GoOnEnter()" />
+            </td>
+        </tr>*@
+</table>
+<br />
+<table style="width:100%">
+    <tr>
+        <td align="center">
+            <div id="lblMsg" class="optionMsg">
+            </div>
+        </td>
+        <td width="70" align="right">
+            <a id="btnGo" role="button" class="btn btn-primary">Confirm</a>
+        </td>
+        <td width="100" align="center">
+            <a id="btnCancel" data-dismiss="modal" class="cancel">Cancel</a>
+        </td>
+    </tr>
+</table>
+<input id="rptcode" type="hidden" value='@Request.QueryString["rptCode"]' />
+
+<script>
+    
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    //For Date Picker
+    dateFrom();
+    dateTo();
+    $('#lblMsg').empty();
+    function dateFrom() {
+        var date = new Date();
+        var newdate = new Date(date);
+        //For From Date
+        newdate.setDate(newdate.getDate() - 1);
+        var dd = (newdate.getFullYear(newdate.getMonth()), '0' + 1);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+        document.getElementById('fromDt').value = someFormattedDate;
+    }
+    function dateTo() {
+        var date = new Date();
+        var newdate = new Date(date);
+        //For To Date
+        newdate.setDate(newdate.getDate());
+        var dd = ('0' + newdate.getDate()).slice(-2);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+        document.getElementById('toDt').value = someFormattedDate;
+    }
+
+    $("#dtpTo, #dtpFrom").datepicker({
+        format: 'yyyy.mm.dd',
+        autoclose: true,
+        startDate: '-120d',
+        endDate: maxDate
+    });
+
+    function isDate(txtDate) {
+        if (txtDate.length != 10) {
+            return false;
+        }
+        if (txtDate.substring(4, 5) !== '.' || txtDate.substring(7, 8) !== '.') {
+            return false;
+        }
+        return true;
+    }
+
+    function GoOnEnter() {
+        if (event.keyCode == 13) {
+            var retVal = OptionsIsValid();
+            if (retVal == true) {
+                Go();
+            }
+        }
+    }
+    $('#btnGo').click(function () {
+        var retVal = OptionsIsValid();
+        if (retVal == true) {
+            Go();
+        }
+    });
+
+    function OptionsIsValid() {
+        $('#lblMsg').empty();
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+
+        if (fDate.length <= 0 || tDate.length <= 0 || !isDate(fDate) || !isDate(tDate) || fDate > tDate) {
+            $('#lblMsg').append('Enter a valid date');
+            return false;
+        }
+        else {
+            $('#lblMsg').empty();
+            return true;
+        }
+    }
+
+    function Go() {
+        $('#lblMsg').empty();
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        $('#option').modal('hide');
+        OpenPage('\\DefectList\\Index?frmDt=' + fDate + ' &toDate=' + tDate + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+        //OpenPage('\\PartsTransaction\\Index?frmDt=' + fDate + '&toDate=' + tDate + '&partNo=' + partNo + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+    }
+</script>

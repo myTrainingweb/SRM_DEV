@@ -1,0 +1,152 @@
+﻿@model IP.Areas.ListingReports.Models.WIP
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<style>
+    .Part_Undrln {
+        text-decoration: underline;
+    }
+
+</style>
+<div id="parentDiv" class="container-fluid">
+ 
+    <div id="dataList" class="panel panel-default">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="box-header with-border bg-blue-gradient">
+                    <button type="button" class="btn btn-box-tool">
+                        <span class="fa fa-th-list fa-lg white"></span>
+                    </button>
+                    <input id="rptCode" type="hidden" value="011" />
+                    <input id="rptTitle" type="hidden" value="WIP" />
+                    <h6 class="box-title"><strong>@ViewBag.ReportTitle  </strong><strong id="filterString"></strong></h6>
+                    <div id="buttons" class="box-tools pull-right">
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="lstData" class="table table-bordered table-striped text-sm" width="100%">
+                        <thead>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+
+
+            </div>
+
+
+            <div id="left_panel" class="col-md-2">
+                <div id="left_bot_section" class="box panel panel-default" style="height:100%;text-align:center;padding-top: 50px;">
+                    <h4>Click hyperlinks on left section to load Serial No.</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    ToggleDataList(false);
+    LoadData();
+    function LoadData() {
+
+        var _lstData = @Html.Raw(Json.Encode(Model.lstWip));  //datatable wiplist
+        var _lstDataColumn = @Html.Raw(Json.Encode(Model.lstDataColumn)); // column headers
+         var ProgramID = '@ViewBag.ProgramID';
+        console.log(ProgramID)
+        var th = '<tr>'; //create th for headers
+        var tft = '<tr>'; //create th for footers
+
+        $.each(_lstDataColumn, function (index, value) {
+
+            if (index == 0) {
+                th += '<th id=idx' + index + ' class="notexport">' + value + ' </th>'; // for table headers
+            }
+            else {
+                th += '<th id=idx' + index + '>' + value + ' </th>'; // for table headers
+            }
+
+            if (index == 1) {
+                tft += '<th Style="text-align:left">Total :</th>';
+            }
+            else if (index == 3) {
+                tft += '<th></th>';
+                //for table footer show total.
+            }
+            else {
+                tft += '<th></th>'; // for table footers
+            }
+
+
+        });
+        th += '</tr>'; // th end
+        tft += '</tr>' // th footer end
+        $('#lstData >thead').append(th); // th header append to thead
+        $('#lstData >tfoot').append(tft); // th footer append to footer
+
+
+        var columnDef = [];
+
+        columnDef.push({ targets: [0], "title": "Program", "visible": false });
+        columnDef.push({
+            targets: [1], "title": "Part No.", "width": "250px",
+            render: function (data, type, row) {
+                var formId = "partInquiryForm_" + row[1] + "_" + row[0];
+                var html = '<form id="' + formId + '" method="POST" action="\\PartInquiry\\Detail" target="_blank" style="margin:1px;">' +
+                    '<input type="hidden" name="partNo" value="' + row[1] + '">' +
+                    '<input type="hidden" name="ProgramId" value="' + row[0] + '">' +
+                    '<input type="hidden" name="page" value="list">' +
+                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                    '</form>';
+                return html;
+            }
+        });
+
+
+        columnDef.push({ targets: [3], "title": "Description" });
+        // hyperlink on in_wip units
+        for (i = 3; i <= _lstDataColumn.length - 1; i++) {
+
+            columnDef.push({
+                "className": "text-right", "width": "70px", "targets": i,
+                render: function (data, type, row, index) {
+                    var rowData = document.getElementById('idx' + index.col).innerText;
+                    var url = '';
+                    url = '<a href="#" class="Part_Undrln" onclick="OpenView(\'\\\\WIP\\\\GetUnits?partNo=' + row[1] + '&workStation=' + rowData + '&ProgramID=' + ProgramID + '\',\'left_panel\')">' + data + '</a>';
+                    return url;
+                }
+            });
+
+        }
+
+        var footerfunc = function () {
+            var api = this.api();
+            //apply sum on hyperlink
+            for (i = 3; i <= _lstDataColumn.length-1; i++) {
+                var colValue = api.column(i);
+                colValue = colValue.data();
+                var rowData = document.getElementById('idx' + i).innerText;
+                colValue = colValue.sum();
+
+                $(api.column(i).footer()).html(
+
+                    '<a href="#" class="Part_Undrln" onclick="OpenView(\'\\\\WIP\\\\GetUnits?workStation=' + rowData + '\',\'left_panel\')">' + thousands_separators(colValue) + '</a>'
+                );
+
+
+            }
+        }
+        //ToggleDataList(true);
+        ToggleDataList(true);
+        var h = getHeight(95);
+        //MakeFrameGrid('lstData', _lstData, h, columnDef, 'lstWIP', true, false, footerfunc);
+       // MakeFrameGrid('lstData', _lstData, 0, columnDef, 'lstWIP', true, false, footerfunc, false, $('#box-title').text(), true, false);
+        MakeDataGrid('lstData', _lstData, 0, columnDef, true, true, footerfunc);
+
+
+    }
+
+    
+</script>

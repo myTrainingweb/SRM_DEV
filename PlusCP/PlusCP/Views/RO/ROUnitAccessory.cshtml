@@ -1,0 +1,75 @@
+﻿@model PlusCP.Models.RO
+@{
+    ViewBag.Title = "ROUnitAccessory";
+    Layout = cCommon.SwitchToDetailPage(Request.Url.PathAndQuery);
+}
+
+<style>
+    /* .box-header {
+        padding: 4px;
+    }*/
+</style>
+<div id="dataList" class="box panel panel-default" >
+    <input id="rptcode" type="hidden" value="001" />
+    <div class="box-header with-border" style="background-color:#325FAB">
+        <h6 class="box-title" id="head_lstUnitLst"><strong>@ViewBag.ReportTitle</strong><strong id="filterString"></strong></h6>
+        <div id="buttons_lstROUnitAccessory" class="box-tools pull-right">
+        </div>
+    </div>
+    <div class="box-body" id="lstAcc" style="height:30%">
+        <table id="lstROUnitAccessory" class="table table-bordered table-striped text-sm table-hover" style="width:100px">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <th>Total :</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var _lstROUnitAccessory = @Html.Raw(Json.Encode(Model.lstROUnitAccessory));
+
+            var tableHeader = $('.table').innerHeight();
+            var topHeader = $('.box-header').innerHeight();
+            var browserHeight = window.innerHeight;
+            var gridHeight = browserHeight - tableHeader - topHeader - 8;
+
+            // Set Columns Width
+        var columnWidth = [
+            { "data": "AccessoryPartNo", "title": "Part No.", "width": "120px" },
+            { "data": "AccessorySerialNo", "title": "Serial No.", "width": "140px" },
+            { "data": "Quantity", "title": "Qty", "width": "40px", "className": "text-right" },
+            { "data": "Username", "title": "Created By", "width": "100px" },
+            {
+                "data": "LastActivityDate", "title": "Last Activity On", "width": "100px", "className": "text-right",
+
+            }
+            ]
+
+
+            ToggleDataList(true);
+        //MakeFrameGrid('lstROUnitAccessory', _lstROUnitAccessory, 350, columnWidth, false, false, false, false, false, $('#head_lstROUnitAccessory').text(), false, false);
+        MakeMeBabyGrid('lstROUnitAccessory', _lstROUnitAccessory, 0, columnWidth, false, false, $('#head_lstROUnitAccessory').text(), false,'lstAcc');
+
+    });
+</script>
+
+
+
+

@@ -1,0 +1,151 @@
+﻿@model PlusCP.Models.Image
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<style>
+</style>
+<div id="parentDiv" class="container">
+    <div id="dataList" class="box panel panel-default">
+        <div class="box-header with-border bg-blue-gradient">
+            <button type="button" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                <span class="fa fa-filter fa-lg white"></span>
+            </button>
+            <h6 class="box-title"><strong>@ViewBag.ReportTitle </strong><strong id="filterString"></strong></h6>
+            <div id="buttons" class="box-tools pull-right">
+            </div>
+        </div>
+        <div class="box-body" id="lstP">
+            <table id="lstImage" class="table table-bordered table-striped text-sm table-hover" style="width:100%">
+                <thead class="sorted-asc">
+                    <tr>
+                        <th class="notexport"></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="notexport"></th>
+                        <th class="notexport"></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tblBody"></tbody>
+                @*<tfoot>
+                        <tr>
+                            <th class="notexport"></th>
+                            <th class="notexport"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>*@
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    ToggleDataList(false);
+    LoadData();
+     @using Newtonsoft.Json;
+    function DisplayImage(ImageDataID) {
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/Image/GetImage',
+            data: {
+                imageDataId: ImageDataID
+            },
+            datatype: JSON,
+            success: function (data) {
+                $('#commentsheader').html('Picture' + '<button type="button" class="close full-opacity-hover" data-dismiss="modal" style="margin-top:-7px;">&times;</button>');
+                if (data.ImageBase64String !== null) {
+                    $('#commentsbody').html('<img src="data:image/png;base64,' + data.ImageBase64String + '" width="100%" height="35%"/>');
+                } else {
+                    $('#commentsbody').html('Image not available.');
+                }
+                $('#comments').modal('show');
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+    }
+    function LoadData() {
+        $('#option').modal('hide');
+        @using Newtonsoft.Json;
+        var isSingleRow = false;
+
+        var _lstImage = @Html.Raw(JsonConvert.SerializeObject(Model.lstImage));
+        var _lstfilterString = @Html.Raw(Json.Encode(Model.filterString));
+
+        $('#filterString').append(_lstfilterString);
+        if (!isSingleRow) {
+                var columnDef = [
+                            { "data": "ID", "title": "ID", "width": "60px", "visible": false },
+                            { "data": "ProgramId", "title": "ProgramId", "width": "80px", "visible": false },
+                            { "data": "programName", "title": "Program", "width": "60px" },
+                            { "data": "Name", "title": "Name", "width": "100px" },
+                            {
+                                "data": "Picture", "title": "Picture", "width": "70px",
+                                render: function (data, type, row, index) {
+
+                                    //  var rowData = document.getElementById('idx' + i).innerText;
+
+                                    var url = '';
+                                    url = '<a href="#" onClick=DisplayImage("' + row["ImageDataID"] + '")>View Image</a>';
+                                    return url;
+                                }
+                            },
+                            { "data": "OrderNo", "title": "Order No.", "width": "80px" },
+                            {
+                                "data": "SerialNo", "title": "Serial No.",
+                                //render: function (data, type, row) {
+
+                                //    var d = data.toString();
+
+                                //    if (row["SerialNo"] == "*" || row["PartNo"] == "") {
+                                //        url = row["SerialNo"];
+                                //    }
+                                //    else {
+
+                                //        var url = '<a href= "\\ListingReports\\PartsSerial\\Detail?serialNo=' + row["SerialNo"] + '&ProgramId=' + row["ProgramId"] + '&PartNo=' + encodeURIComponent(row["PartNo"]) + '&page=list" target=_blank > ' + d + '</a>';
+                                //    }
+                                //    return url;
+                                //}
+                            },
+                            { "data": "PartNo", "title": "Part No.", "width": "100px" },
+                            { "data": "CustomerReference", "title": "Customer Ref.", "width": "120px" },
+                            { "data": "TableName", "title": "TableName", "width": "80px", "visible": false },
+                            { "data": "TableID", "title": "TableID", "width": "80px", "visible": false },
+                            { "data": "ImageDataID", "title": "ImageDataID", "width": "90px", "visible": false },
+                            { "data": "Username", "title": "Created By", "width": "100" },
+                            { "data": "CreateDate", "title": "Created On", "width": "100px", "className":"text-right" },
+                            { "data": "LastActivityDate", "title": "Last Activity On", "width": "100px", "className": "text-right" }
+
+                          ];
+                                ToggleDataList(true);
+
+                        MakeDataGrid('lstImage', _lstImage, 0, columnDef, true, true);
+
+        }
+        }
+</script>
+
+
+
+

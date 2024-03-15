@@ -1,0 +1,270 @@
+﻿
+table > thead > tr > th {
+    text-align: center !important;
+    vertical-align: middle !important;
+    background-color: #d9d9d9 !important;
+    color: dimgrey;
+}
+
+.black {
+    color: black;
+}
+
+.boldCol {
+    font-weight: bold;
+}
+
+.white {
+    color: white;
+}
+
+    .white:hover {
+        color: white;
+    }
+
+a:hover {
+    color: black;
+}
+
+.optionButton {
+    margin: 5px;
+}
+
+/*.table tbody tr:hover td {
+    background-color: #4dbeff;
+}*/
+
+.headerSection {
+    background-color: white;
+}
+
+.detailSection tr:hover td {
+    background-color: #C0C0C0;
+}
+
+.glyphicon {
+    margin-right: 4px !important; /*override*/
+}
+
+.pagination .glyphicon {
+    margin-right: 0px !important; /*override*/
+}
+
+.pagination a {
+    color: #555;
+}
+
+.panel ul {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+
+.chartHeight {
+    height: 300px;
+}
+
+.cardShadow {
+    box-shadow: 10px 10px 10px grey;
+}
+
+.tabLst {
+    padding: 10px;
+    font-family: 'Helvetica Neue', Helvetica;
+    background-color: #29373D;
+}
+
+.tabLstItem {
+    padding: 5px;
+    display: block;
+}
+
+    .tabLstItem:hover {
+        background-color: white;
+        color: white;
+        color: white;
+    }
+
+
+/*Due to scrolly misaligned table headers */
+/*.dataTables_scrollHeadInner {
+    width: 1444px;
+}
+
+    .dataTables_scrollHeadInner table {
+         width: 1444px;
+    }*/
+/* End - Due to scrolly misaligned table headers */
+
+.fullWidth {
+    width: 100%;
+}
+
+.optionMsg {
+    color: red;
+}
+
+.optionMsgGreen {
+    color: darkgreen !important;
+}
+
+.cancel {
+    color: lightgray;
+}
+
+    .cancel:hover {
+        color: gray;
+    }
+
+.confirm {
+    color: #007FCB;
+}
+
+    .confirm:hover {
+        color: #005180;
+    }
+
+#wait {
+    display: none;
+    width: 69px;
+    height: 89px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 2px;
+}
+
+.bg-white {
+    background-color: #ffffff !important;
+    color: black;
+}
+
+
+.txtSearch {
+    margin-top: 3px;
+    height: 26px;
+    width: 150px;
+    border: none;
+    color: darkgrey;
+    border-radius: 15px;
+}
+
+.txtSearch-baby {
+    margin-top: -2px;
+    margin-left: 5px;
+    width: 150px;
+    border: none;
+}
+
+
+.txtSearch-frame {
+    margin-top: 3px;
+    height: 26px;
+    width: 150px;
+    border: none;
+    border-radius: 15px;
+    color: darkgrey;
+}
+
+.dropdown-list {
+    background-color:whitesmoke;
+    color:darkslategrey;
+    margin-top:6px;
+    height: 30px;
+}
+
+input::-ms-clear {
+    display: none;
+}
+
+table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after,
+table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_asc_disabled::after,
+table.dataTable thead .sorting_desc_disabled::after {
+    display: none !important;
+}
+
+.btn-baby {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.btn-box-tool-baby {
+    padding: 0px;
+    font-size: 12px;
+    background: transparent;
+    color: #97a0b3;
+}
+
+.detail-header {
+    padding: 3px;
+}
+
+
+.width-100 {
+    width: 100% !important;
+}
+
+.option-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#lnkPOHistory, #lnkInvTrn {
+    text-decoration: underline;
+}
+
+#PI_Heading {
+    padding-top: 5px;
+}
+
+.pull-left {
+    float: left !important;
+}
+/*Add by Tahir*/
+a {
+    text-decoration: underline;
+}
+
+.v-align-middle {
+    vertical-align: middle !important;
+}
+
+.section-padding {
+    padding-top: 2px;
+    padding-right: 2px;
+    margin-bottom: -5px;
+}
+
+.section-color {
+    background-color: rgba(221, 221, 221, 1);
+}
+
+.padding-top-6 {
+    padding-top: 6px;
+}
+
+.sqlDoc {
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.sqlDocFrameGrid {
+    font-size: 13px;
+    margin-bottom: 2px;
+    margin-right: 5px;
+}

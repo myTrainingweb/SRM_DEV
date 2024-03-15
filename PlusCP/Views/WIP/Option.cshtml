@@ -1,0 +1,75 @@
+﻿@model IP.Areas.ListingReports.Models.WIP
+@{
+    ViewBag.Title = "Option";
+    Layout = null;
+}
+
+<style>
+    .pad {
+        width: 180px;
+    }
+</style>
+<table class="fullWidth">
+    <tr>
+        <td colspan="4" class="pad">
+            @Html.LabelFor(model => model.custRef, new { @class = "col-4 col-form-label" })
+            <input type="text" class="form-control" id="custRef" name="custRef" autofocus
+                   onkeydown="GoOnEnter()" />
+        </td>
+    </tr>
+    @*<tr>
+        <td colspan="4" class="pad">
+            @Html.LabelFor(model => model.partNo, new { @class = "col-4 col-form-label" })
+            <input type="text" class="form-control" id="partNo" name="partNo" autofocus
+                   onkeydown="GoOnEnter()" />
+        </td>
+    </tr>*@
+
+</table>
+<table width="100%">
+    <tr>
+        <td align="center">
+            <div id="lblMsg" class="optionMsg">
+            </div>
+        </td>
+        <td width="70" align="right">
+            <a id="btnGo" role="button" class="btn btn-primary">Confirm</a>
+        </td>
+        <td width="100" align="center">
+            <a id="btnCancel" data-dismiss="modal" class="cancel">Cancel</a>
+        </td>
+    </tr>
+</table>
+<script>
+    $('#option').on('shown.bs.modal', function () {
+        $('#serialNo').focus();
+    });
+
+    function GoOnEnter() {
+        if (event.keyCode == 13) {
+            var retVal = OptionsIsValid();
+            if (retVal == true) {
+                Go();
+            }
+        }
+    }
+
+    function GoOnEnter() {
+        if (event.keyCode == 13) {
+            Go();
+        }
+    }
+
+    $('#btnGo').click(function () {
+        Go();
+    });
+
+    function Go() {
+        var partNo = $('#partNo').val();
+        var custRef = $('#custRef').val();
+
+        $('#option').modal('hide');
+        OpenPage('\\WIP\\GetWIP?custRef=' + custRef + '&partNo=' + partNo + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+    }
+</script>
+

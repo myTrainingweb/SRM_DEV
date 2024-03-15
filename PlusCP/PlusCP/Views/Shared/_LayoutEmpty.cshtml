@@ -1,0 +1,74 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>SRM</title>
+    @System.Web.Optimization.Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <style>
+        a {
+            cursor: pointer;
+        }
+
+        .modal-content {
+            overflow: visible;
+        }
+        .modalcontent {
+            height: 80%;
+            border-radius: 0;
+        }
+    </style>
+</head>
+@{ 
+    string isAdmin = Session["isAdmin"] as string;
+}
+<body onresize="resize_grid_height()" onload="get_initial_attributes()">
+    <div id="renderBody" class="container-fluid">
+        @RenderBody()
+    </div>
+    @System.Web.Optimization.Scripts.Render("~/bundles/jquery")
+    @RenderSection("js", false)
+
+
+    <div id="comments" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div id="commentsheader" class="modal-header bg-blue-gradient option-title">
+
+                </div>
+                <div id="commentsbody" class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+    var isAdmin = '@isAdmin';
+    var old_browser_height;
+    function get_initial_attributes() {
+        //old_browser_height = window.innerHeight;
+    }
+    function resize_grid_height() {
+
+        //var new_browser_height = window.innerHeight;
+        //var grid_height = $('.dataTables_scrollBody').height();
+        //if (isNaN(grid_height)) {
+        //    return;
+        //}
+        //if (new_browser_height > old_browser_height) {
+        //    var difference = new_browser_height - old_browser_height;
+        //    grid_height += difference;
+        //}
+        //else {
+        //    var difference = old_browser_height - new_browser_height;
+        //    grid_height -= difference;
+        //}
+        //$('.dataTables_scrollBody').css('height', grid_height + 'px');
+        //old_browser_height = new_browser_height;
+    }
+
+</script>

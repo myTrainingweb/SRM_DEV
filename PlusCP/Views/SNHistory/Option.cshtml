@@ -1,0 +1,214 @@
+﻿@model PlusCP.Models.SNHistory
+@{
+    ViewBag.Title = "Option";
+    Layout = null;
+}
+
+
+<style>
+    .pad {
+        width: 180px;
+    }
+</style>
+<table class="fullWidth">
+    @*<tr>
+            <td class="pad">
+                <strong>From:</strong>
+                <div class='input-group date' id='dtpFrom'>
+                    @Html.TextBoxFor(model => model.fromDt, htmlAttributes: new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </td>
+            <td class="pad">
+                <strong>To:</strong>
+                <div class='input-group date' id='dtpTo'>
+                    @Html.TextBoxFor(model => model.toDt, htmlAttributes: new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </td>
+        </tr>*@
+    @*<tr>
+        <td class="pad" colspan="4">
+            <label>Report Type:</label>
+            @Html.DropDownList("rptType", new List<SelectListItem>
+                {
+
+                   new SelectListItem{ Text="History", Value = "SNHistory",  },
+                   new SelectListItem{ Text="Not Shipped", Value = "SNNotShipped" },
+                   new SelectListItem{ Text="On Hold", Value = "SNOnHold" }
+
+
+                }, new { @class = "form-control" })
+        </td>
+    </tr>*@
+    <tr id="inputBox">
+        <td colspan="4" class="pad">
+            @Html.LabelFor(model => model.serialNo, new { @class = "col-4 col-form-label" })
+            <input type="text" class="form-control" id="serialNo" name="serialNo" placeholder="Specify atleast 3 characters for Serial No." autofocus
+                   onkeydown="GoOnEnter()" />
+        </td>
+    </tr>
+</table>
+<table width="100%">
+    <tr>
+        <td style="padding: 10px;">
+            <div id="lblMsg" class="optionMsg">
+            </div>
+        </td>
+        <td width="70" align="right">
+            <a id="btnGo" role="button" class="btn btn-primary">Confirm</a>
+        </td>
+        <td width="100" align="center">
+            <a id="btnCancel" data-dismiss="modal" class="cancel">Cancel</a>
+        </td>
+    </tr>
+</table>
+<script>
+    $('#option').on('shown.bs.modal', function () {
+        $('#serialNo').focus();
+    });
+    $('#rptType').change(function () {
+        var report = $('#rptType').val();
+
+        if (report == 'SNHistory') {
+
+            $('#inputBox').removeClass('hide');
+        }
+        else {
+            $('#lblMsg').empty();
+            $('#inputBox').addClass('hide');
+        }
+    })
+
+    function GoOnEnter() {
+        if (event.keyCode == 13) {
+            var retVal = OptionsIsValid();
+            if (retVal == true) {
+                Go();
+            }
+        }
+    }
+    $('#btnGo').click(function () {
+       
+        var retVal = OptionsIsValid();
+        if (retVal == true) {
+            Go();
+        }
+    });
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    //For Date Picker
+    //dateFrom();
+    //dateTo();
+    //function dateFrom() {
+    //    var date = new Date();
+    //    var newdate = new Date(date);
+    //    //For From Date
+    //    newdate.setDate(newdate.getDate() - 30);
+
+    //    //var dd = (newdate.getFullYear(newdate.getMonth()), '0' + 1);
+    //    var dd = ('0' + newdate.getDate()).slice(-2);
+    //    var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+    //    var y = newdate.getFullYear();
+    //    var strat = newdate
+
+    //    var someFormattedDate = y + '.' + mm + '.' + dd;
+
+    //    document.getElementById('fromDt').value = someFormattedDate;
+    //}
+    //function dateTo() {
+    //    var date = new Date();
+    //    var newdate = new Date(date);
+    //    //For To Date
+    //    newdate.setDate(newdate.getDate());
+
+    //    var dd = ('0' + newdate.getDate()).slice(-2);
+    //    var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+    //    var y = newdate.getFullYear();
+    //    var strat = newdate
+
+    //    var someFormattedDate = y + '.' + mm + '.' + dd;
+
+    //    document.getElementById('toDt').value = someFormattedDate;
+    //}
+
+    //$("#dtpTo, #dtpFrom").datepicker({
+    //    format: 'yyyy.mm.dd',
+    //    autoclose: true,
+    //    startDate: '-365d',
+    //    endDate: maxDate
+    //});
+
+    //function isDate(txtDate) {
+    //    if (txtDate.length != 10) {
+    //        return false;
+    //    }
+    //    if (txtDate.substring(4, 5) !== '.' || txtDate.substring(7, 8) !== '.') {
+    //        return false;
+    //    }
+    //    return true;
+    //}
+
+    function OptionsIsValid() {
+
+        $('#lblMsg').empty();
+        //var fDate = $('#fromDt').val();
+        //var tDate = $('#toDt').val();
+        var sNo = $('#serialNo').val();
+
+
+        //if (fDate.length <= 0 || tDate.length <= 0 || !isDate(fDate) || !isDate(tDate) || fDate > tDate) {
+        //    $('#lblMsg').append('Enter a valid date');
+        //    return false;
+        //}
+        //else {
+        //    $('#lblMsg').empty();
+        //    return true;
+        //}
+       
+            if (sNo.length < 3) {
+                $('#lblMsg').text('Specify atleast 3 characters for Serial No.');
+                //$("#lblMsg").css("color", 'red');
+                return false;
+            }
+            else {
+                $('#lblMsg').empty();
+                return true;
+            }
+       
+    }
+
+    function Go() {
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        var serialNo = $('#serialNo').val();
+        //var reportType = $("#rptType option:selected").val();
+        //var reportName = $("#rptType option:selected").text();
+        
+        $('#option').modal('hide');
+            OpenPage('\\SNHistory\\Index?serialNo=' + serialNo + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+        
+        //else if (reportType == 'SNNotShipped') {
+        //    OpenPage('\\SNInvNotShipped\\Index?rptName=' + reportName)
+
+        //}
+        //else if (reportType == 'SNOnHold') {
+        //    OpenPage('\\SerialNumOnHold\\Index?rptName=' + reportName)
+
+        //}
+    }
+</script>
+
+
+

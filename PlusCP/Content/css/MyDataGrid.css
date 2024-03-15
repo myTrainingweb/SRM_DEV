@@ -1,0 +1,88 @@
+﻿.header {
+    background-color: #3e525b;
+    font-family: Arial;
+    color: White;
+    border: 1px transparent;
+    height: 25px;
+    text-align: center !important;
+    text-align-last: center;
+    font-size: 12px;
+    border-color: white;
+    padding: 7px;
+}
+
+.rows {
+    background-color: #fff;
+    font-family: Arial;
+    font-size: 10px;
+    color: #000;
+    min-height: 25px;
+    text-align: left;
+    border:  1px transparent;
+    border-color:white;
+    padding:10px;
+}
+    .rows:hover {
+        background-color: #b0bed9;
+        font-family: Arial;
+        color: black;
+        text-align: left;
+    }
+
+.selectedrow {
+    background-color: #ff8000;
+    font-family: Arial;
+    color: #ddd;
+    
+    font-weight: bold;
+    text-align: left;
+}
+
+.gvlist a /** FOR THE PAGING ICONS **/ {
+    background-color: Transparent;
+    padding: 5px 5px 5px 5px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .gvlist a:hover /** FOR THE PAGING ICONS HOVER STYLES**/ {
+        background-color: #000;
+        color: #fff;
+    }
+
+.gvlist span /** FOR THE PAGING ICONS CURRENT PAGE INDICATOR **/ {
+    background-color: #c9c9c9;
+    color: #000;
+    padding: 5px 5px 5px 5px;
+}
+
+.pager {
+    background-color: #646464;
+    font-family: Arial;
+    color: White;
+    height: 30px;
+    text-align: left;
+}
+
+.gvlist td {
+    padding: 5px;
+}
+
+.gvlist th {
+    padding: 5px;
+}
+
+/*
+tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+*/
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+    
+}
+.footer {
+    background-color:white !important;
+}

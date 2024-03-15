@@ -1,0 +1,272 @@
+﻿
+@model PlusCP.Models.RO
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<div id="parentDiv" class="container-fluid">
+    <div id="dataList" class="box panel panel-default">
+        <div class="box-header with-border bg-blue-gradient">
+            @{
+                if (ViewBag.Option == "op")
+                {
+                    <button type="button" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                        <span class="fa fa-filter fa-lg white"></span>
+                    </button>
+                    <input id="rptCode" type="hidden" value="001" />
+                    <input id="rptTitle" type="hidden" value="@ViewBag.ReportTitle" />
+                }
+                else
+                {
+                    <button type="button" id="opp" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                        <span class="fa fa-filter fa-lg white"></span>
+                    </button>
+                    <input id="rptCode" type="hidden" value="001" />
+                    <input id="rptTitle" type="hidden" value="@ViewBag.ReportTitle" />
+
+                }
+            }
+            <h6 class="box-title"><strong>@ViewBag.ReportTitle Detail ></strong><strong id="filterString"></strong></h6>
+            <div id="buttons" class="box-tools pull-right">
+
+            </div>
+        </div>
+
+        <div class="box-body" id="lstP" style="height:90%">
+            <table id="lstRO" class="table table-bordered table-striped text-sm table-hover">
+                <thead class="sorted-asc">
+                    <tr>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+                <tbody id="tblBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>Total :</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    ToggleDataList(false);
+    LoadData();
+    function LoadData() {
+        $('#tblBody').empty();
+
+
+        $('#option').modal('hide');
+        var isSingleRow = false;
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        var isAllDate = $('#isAllDate').is(':checked');
+        var custRef = $('#custRef').val();
+        var _programId = $('#ProgramID').val();
+        var _ProgramName = $("#ProgramID option:selected").text();
+        var status = '@Request.QueryString["status"].ToString()';
+        var statusId ='@Request.QueryString["statusId"].ToString()';
+
+        //For Multiple Status
+        var statusId = '';
+        var status = '';
+
+        if (selectedParts == "All") {
+            status = "All";
+        }
+        else {
+            $('#lstStatus :selected').each(function (i, sel) {
+                if (i == 0) {
+                    statusId = "'" + ($(sel).val()) + "'";
+                    status = ($(sel).text());
+                }
+                else {
+                    statusId += "," + "'" + ($(sel).val()) + "'";
+                    status = "Multiple";
+                }
+            });
+        }
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/RO/GetRODtl',
+            data: {
+                frmDt: fDate,
+                toDate: tDate,
+                isAllDate: isAllDate,
+                custRef: custRef,
+                programId: _programId,
+                ProgramName: _ProgramName,
+                statusId: statusId,
+                status: status,
+                type:"@ViewBag.ReportTitle1"
+            },
+            datatype: JSON,
+            success: function (data) {
+                $('#filterString').append(data.filterString);
+                var columnDef = [
+                    { "data": "ProgramId", "title": "ProgramID", "width": "60px", "visible": false },
+                    { "data": "Program", "title": "Program", "width": "60px" },
+                    { "data": "ID", "title": "ID", "width": "40px", "visible": false },
+                    {
+                        "data": "CustomerReference", "title": "Customer Ref.", "width": "90px",
+                    render: function (data, type, row) {
+                        var d = data.toString();
+                        var formId = "partInquiryForm_" + row["ID"] + "_" + row["CustomerReference"];
+                        var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                            '<input type="hidden" name="Id" value="' + row["ID"] + '">' +
+                            '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                            '<input type="hidden" name="page" value="list">' +
+                            '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + d + '</a>' +
+                            '</form>';
+                        return html;
+
+                    }
+                                },
+                    {
+                        "data": "PartNo", "title": "Part No.", "width": "90px",
+                        render: function (data, type, row) {
+                            var formId = "partInquiryForm_" + row["PartNo"] + "_" + row["ProgramId"];
+                            var html = '<form id="' + formId + '" method="POST" action="\\PartInquiry\\Detail" target="_blank" style="margin:1px;">' +
+                                '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                '<input type="hidden" name="ProgramId" value="' + row["ProgramId"] + '">' +
+                                '<input type="hidden" name="page" value="list">' +
+                                '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                '</form>';
+                            return html;
+                        }
+                    },
+                    { "data": "ParentSerialNo", "title": "Parent Serial No.", "width": "100px" },
+                    {
+                        "data": "SerialNo", "title": "Serial No.", "width": "120px",
+                        render: function (data, type, row) {
+                            var d = data.toString();
+                            if (row["SerialNo"] == "*" || row["HAS_SN"] == "N") {
+                                html = row["SerialNo"];
+                            }
+                            else {
+                                var formId = "partInquiryForm_" + row["SerialNo"] + "_" + row["PartNo"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\SNHistory\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="serialNo" value="' + row["SerialNo"] + '">' +
+                                    '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + d + '</a>' +
+                                    '</form>';
+                            }
+                            return html;
+                        }
+                    },
+                    { "data": "LocationNo", "title": "Location No.", "width": "100px" },
+                    { "data": "Description", "title": "Location Group", "width": "100px" },
+                    { "data": "Configuration", "title": "Configuration", "width": "70px" },
+                    { "data": "SealedBox", "title": "Sealed Box", "width": "70px", "className": "text-center" },
+                    { "data": "ThirdPartyReference", "title": "Third Party Ref.", "width": "90px" },
+                    { "data": "Status", "title": "Status", "width": "70px" },
+                    { "data": "OrderType", "title": "Order Type", "width": "80px" },
+                    { "data": "Address", "title": "Address", "width": "200px" },
+                    { "data": "City", "title": "City", "width": "70px" },
+                    { "data": "State", "title": "State", "width": "50px" },
+                    { "data": "Country", "title": "Country", "width": "50px" },
+                    { "data": "Zip", "title": "Zip Code", "width": "50px" },
+                    {
+                        "data": "QtyToRcv", "title": "To Recv.", "width": "50px", "className": "text-right", "visible": false
+                        , render: $.fn.dataTable.render.number(',', ' ')
+                    },
+                    { "data": "RcvQty", "title": "Rcvd", "width": "50px", "className": "text-right" },
+                    { "data": "Username", "title": "Username", "width": "110px" },
+                    {
+                        "data": "CreatedOn", "title": "Created On", "width": "90px", "className": "text-right",
+
+                    },
+                    {
+                        "data": "LastActivityOn", "title": "Last Activity On", "width": "90px", "className": "text-right",
+
+                    }
+                ]
+
+
+
+                    ToggleDataList(true);
+                //For Displaying  Footer Sum
+                var footerfunc = function () {
+                    var api = this.api();
+                    //$(api.column(17).footer()).html(thousands_separators(api.column(17).data().sum()));
+                    $(api.column(20).footer()).html(thousands_separators(api.column(20).data().sum()));
+
+                }
+                MakeDataGridIP('lstRO', data.lstRODetail, 0, columnDef, true, true, footerfunc);
+
+                if (data["ErrorMessage"] != null) {
+                    $('.dataTables_empty > p').text(data["ErrorMessage"]);
+                }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+
+
+    }
+    $(document).ready(function () {
+
+        $("#opp").click(function () {
+
+            Navigate('option', '\\RO\\Option', '001', 'Sale Orders', 'Specd by: Abbas Arsiwala @@ Reconext &amp; Designed by: Arsalan Aziz @@ WinIT', 'mailto:kashif@winit.biz?cc=mohsin@winit.biz;Tahir@winit.biz&amp;subject=Sales Order - Detail Report');
+
+        });
+
+    });
+</script>

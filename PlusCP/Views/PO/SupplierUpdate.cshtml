@@ -1,0 +1,421 @@
+﻿@model PlusCP.Models.PO
+@{
+    ViewBag.Title = "Update";
+    Layout = null;
+}
+<style>
+    .Message {
+        height: 200px;
+        width: 500px
+    }
+
+    .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 1.5rem;
+        clear: both;
+        font-weight: 400;
+        color: #212529;
+        text-align: inherit;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+        text-decoration: none;
+    }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background-color: #f8f9fa;
+        }
+</style>
+<div id="parent" class="container-fluid">
+    <input id="rptCode" type="hidden" value="019" />
+    <input id="rptTitle" type="hidden" value="@ViewBag.ReportTitle" />
+    <div id="dataLists" class="box panel panel-default">
+        <div class="box-header with-border bg-blue-gradient">
+
+            <h6 class="box-title"><strong>@ViewBag.ReportTitle  </strong><strong id="filterString"></strong></h6>
+            <div id="buttons" class="box-tools pull-right">
+
+            </div>
+        </div>
+
+        <div class="box-body" id="lstP">
+            <table id="lstUpdate" class="table table-bordered table-striped text-sm table-hover" style="width:100%">
+                <thead class="sorted-asc">
+                    <tr>
+                        <th></th>
+
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                @*<tbody id="tblBody"></tbody>*@
+                <tfoot>
+                    <tr>
+                        @*<th>Total :</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>*@
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div id="alertContainer"></div>
+
+
+<!-- Modal -->
+<div id="ActionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <!-- Increased modal width -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="padding-left:4px; padding-top:2px" id="showTitle">Propose</h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Left side with green background color -->
+                        <div class="col-xs-12" style="background-color:#F5F5F5">
+                            <!-- Green background -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>PO No:</label>
+                                        @Html.EditorFor(model => model.PONo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "PO No.", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Part No:</label>
+                                        @Html.EditorFor(model => model.PartNo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Part No", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Vendor Name:</label>
+                                        @Html.EditorFor(model => model.Vendor, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Buyer Name", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12" style="background-color:#F5F5F5">
+                            <!-- Green background -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <br />
+                                        <label>Qty:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Current:</label>
+                                        @Html.EditorFor(model => model.CurrentQty, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Current Qty", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Last Committed:</label>
+                                        @Html.EditorFor(model => model.CommitQty, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Vendor Qty", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Buyer Proposed:</label>
+                                        @Html.EditorFor(model => model.ProposedQty, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Qty" } })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <br />
+                                        <label>Price:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Current:</label>
+                                        @Html.EditorFor(model => model.CurrentPrice, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Current Price", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Last Committed:</label>
+                                        @Html.EditorFor(model => model.CommitPrice, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Vendor Price", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Buyer Proposed:</label>
+                                        @Html.EditorFor(model => model.ProposedPrice, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Price" } })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <br />
+                                        <label>Due Date:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Current:</label>
+                                        @Html.EditorFor(model => model.CurrentDueDate, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Current Due Date", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Last Committed:</label>
+                                        @Html.EditorFor(model => model.CommitDueDate, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Vendor Due Date", disabled = "disabled" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Buyer Proposed:</label>
+                                        @*@Html.EditorFor(model => model.ProposedDueDate, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Due Date" } })*@
+                                        @Html.TextBoxFor(model => model.ProposedDueDate, htmlAttributes: new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12" style="background-color:#F5F5F5">
+                            <label>Message</label>
+                            @Html.TextAreaFor(model => model.Message, new { style = "height: 20%; width: 100%;", htmlAttributes = new { placeholder = "Email Body", @class = "form-control input-lg" } })
+                            <label id="lblMsg1" style="color:green"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancel" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="btnSend" type="button" class="btn btn-primary">Save</button>
+                <label id="VendorId" style="visibility:hidden" hidden></label>
+                <label id="VendorName" style="visibility:hidden" hidden></label>
+                <label id="BuyerId" style="visibility:hidden" hidden></label>
+                <label id="GUID" style="visibility:hidden" hidden></label>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    ToggleDataList(false);
+
+    LoadData();
+    function LoadData() {
+        $('#tblBody').empty();
+        $('#lstUpdate').DataTable().clear();
+        $('#lstUpdate').DataTable().destroy();
+
+        $('#option').modal('hide');
+        var isSingleRow = false;
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/PO/GetUpdateData',
+            data: {
+
+            },
+            datatype: JSON,
+            success: function (data) {
+                $('#filterString').append(data.filterString);
+                $('#tblBody').empty();
+                $('#lstUpdate').DataTable().clear();
+                $('#lstUpdate').DataTable().destroy();
+
+                if (!isSingleRow) {
+                    var columnDef = [
+                        { "data": "GUID", "title": "GUID", "width": "100px", "visible": false },
+                        {
+
+                            "data": "Accept", "title": "Actions", "width": "50px",
+                            render: function (data, type, row) {
+                                return '<div class="dropdown">' +
+                                    '<button class="btn btn-secondary dropdown-toggle" type="button" id="ddlAction" style="font-size:12px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                                    'Choose an Action' +
+                                    '</button>' +
+                                    '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                                    '<a class="dropdown-item" href="#" onclick="handleActionAHR(\'' + row["GUID"] + '\', \'Accept\')">Accept</a>' +
+                                    '<a class="dropdown-item" href="#" onclick="handleAction(\'' + row["PONo"] + '\', \'' + row["PartNo"] + '\', \'' + row["VendorName"] + '\', \'' + row["CurrentQty"] + '\', \'' + row["CurrentPrice"] + '\', \'' + row["CurrentDueDate"] + '\', \'' + row["CommitQty"] + '\', \'' + row["CommitPrice"] + '\', \'' + row["CommitDueDate"] + '\', \'' + row["GUID"] + '\', \'Propose\')">Propose</a>' +
+                                    '<a class="dropdown-item" href="#" onclick="handleActionAHR(\'' + row["GUID"] + '\', \'Hold\')">Hold</a>' +
+                                    '<a class="dropdown-item" href="#" onclick="handleActionAHR(\'' + row["GUID"] + '\', \'Reject\')">Reject</a>' +
+                                    '</div>' +
+                                    '</div>';
+                            }
+
+                        },
+
+                        { "data": "PONo", "title": "PO No.", "width": "100px" },
+                        { "data": "PartNo", "title": "Part No.", "width": "40px" },
+                        { "data": "PartDesc", "title": "Part Desc." },
+                        { "data": "VendorName", "title": "Vendor Name" },
+                        { "data": "CurrentQty", "title": "Current Qty", "width": "50px" },
+                        { "data": "CurrentPrice", "title": "Current Price", "width": "50px" },
+                        { "data": "CurrentDueDate", "title": "Current Due Date", "width": "90px", "className": "text-right" },
+                        { "data": "CommitQty", "title": "Vendor Qty", "width": "50px" },
+                        { "data": "CommitPrice", "title": "Vendor Price", "width": "50px" },
+                        { "data": "CommitDueDate", "title": "Vendor Due Date", "width": "90px", "className": "text-right" },
+
+                    ]
+
+
+                    ToggleDataList(true);
+                    MakeDataGrid('lstUpdate', data.lstUpdate, 0, columnDef, true, true);
+                }
+                if (data["ErrorMessage"] != null) {
+                    $('.dataTables_empty > p').text(data["ErrorMessage"]);
+                }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+    }
+
+    // Click event handler for dropdown items
+    function handleAction(PONo, partNo, vendor, currentQty, currentPrice, currentDueDate, commitQty, commitPrice, commitDueDate, GUID, action) {
+
+        $('#PONo').val(PONo);
+        $('#Vendor').val(vendor);
+        $('#PartNo').val(partNo);
+
+        $('#CurrentQty').val(currentQty);
+        $('#CommitQty').val(commitQty);
+
+        $('#CurrentPrice').val(currentPrice);
+        $('#CommitPrice').val(commitPrice);
+
+        $('#CurrentDueDate').val(currentDueDate);
+        $('#CommitDueDate').val(commitDueDate);
+
+
+        $('#GUID').val(GUID);
+        $('#showTitle').empty();
+        $('#showTitle').append(action);
+        $('#ActionModal').modal('show');
+
+
+    }
+
+    function handleActionAHR(GUID, Action) {
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/PO/UpdateHasAction',
+            data: {
+                ActionAHR: Action,
+                GUID: GUID,
+
+            },
+            datatype: JSON,
+            success: function (data) {
+                ToggleDataList(false);
+                if (data == 'Updated') {
+
+                    alert('Record has been updated');
+                    showAlert('Success! AJAX request was successful.', 'success');
+                }
+            }
+
+        })
+    }
+
+    dateTo();
+    // Function to display alert message
+    function showAlert(message, type) {
+        var alertContainer = document.getElementById('alertContainer');
+        var alertHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">';
+        alertHTML += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+        alertHTML += '<span aria-hidden="true">&times;</span></button>';
+        alertHTML += message + '</div>';
+        alertContainer.innerHTML = alertHTML;
+    }
+    $("#ProposedDueDate").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+    $('#btnSend').click(function () {
+        $('#lblMsg1').empty();
+
+        var GUID = $('#GUID').val();
+        var Qty = $('#ProposedQty').val();
+        var Price = $('#ProposedPrice').val();
+        var DueDate = $('#ProposedDueDate').val();
+        var Message = $('#Message').val();
+        var PONo = $('#PONo').val();
+        var PartNo = $('#PartNo').val();
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/PO/ProposeUpdate',
+            data: {
+                GUID: GUID,
+                Qty: Qty,
+                Price: Price,
+                DueDate: DueDate,
+                Message: Message,
+                PONo: PONo,
+                PartNo: PartNo,
+            },
+            datatype: JSON,
+            success: function (data) {
+                if (data == "Updated") {
+                    $('#lblMsg1').append('Email has been sent');
+                }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+
+    });
+    function dateTo() {
+        var date = new Date();
+        var newdate = new Date(date);
+        //For To Date
+        newdate.setDate(newdate.getDate());
+        var dd = ('0' + newdate.getDate()).slice(-2);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+        document.getElementById('ProposedDueDate').value = someFormattedDate;
+    }
+
+    $("#ProposedDueDate").datepicker({
+        format: 'yyyy.mm.dd',
+        autoclose: true,
+        startDate: 'd',
+        endDate: null
+    });
+</script>
+
+

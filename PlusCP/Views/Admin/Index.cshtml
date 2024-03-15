@@ -1,0 +1,222 @@
+﻿@model PlusCP.Models.Admin
+@{
+    ViewBag.Title = "Admin";
+    Layout = "";
+}
+<div class="box">
+    <div id="parentDiv" class="container-fluid">
+        <div id="dataList">
+            <div class="row section-color">
+                <div class="col-md-8">
+                    <div class="box panel panel-default">
+                        <div class="box-header bg-blue-gradient">
+                            <h6 class="box-title"><strong>Admin</strong></h6>
+                        </div>
+                        <div id="Partlst" class="box-body">
+                            <table id="lstUsers" class="table table-bordered table-striped text-sm table-hover" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Sign In Id</th>
+                                        <th>Vendor Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblBody"></tbody>
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="box panel panel-default">
+                        <div class="box-header bg-blue-gradient">
+                            <h6 class="box-title"><strong>Rights</strong></h6>
+                        </div>
+                        <div id="Rightlst" class="box-body" style="height:250px;">
+                            <table id="lstRights" class="table table-bordered table-striped text-sm table-hover" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Rights</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblBody"></tbody>
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <form id="myForm" class="form-horizontal" style="margin-top:20px; margin-left:50px;">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                @Html.EditorFor(model => model.First_Name, new { htmlAttributes = new { @class = "form-control" } })
+                               
+                                @*<input class="form-control" id="FirstName" placeholder="First Name">*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                @Html.EditorFor(model => model.Last_Name, new { htmlAttributes = new { @class = "form-control" } })
+                              
+                            </div>
+                        </div>
+                    
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.DropDownListFor(model => model.Type,
+                                                            new List<SelectListItem>
+                                                            {
+
+                                                            new SelectListItem {  Text= "Customer", Value= "C", Selected= true},
+                                                            new SelectListItem { Text="Vendor", Value="V"},
+                                                            }, htmlAttributes: new { @class = "form-control" })
+                                <br />
+                            </div>
+                        </div>
+               
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        @Html.EditorFor(model => model.signIn_Id, new { htmlAttributes = new { @class = "form-control" } })
+                      
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                     
+                    </div>
+                </div>
+                </form>
+                <div>
+                    <button id="btnAdd" type="button" class="btn btn-success" style="width:100px; margin-top:20px;margin-left:55px;">Add</button>
+                    <button id="btnReset" type="button" class="btn btn-primary" style="width:100px; margin-top:20px;">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+    ToggleDataList(false);
+    LoadUsers();
+    LoadRights();
+
+
+
+    $(function () {
+        $('#btnReset').click(function () {
+
+            $('#FirstName').val("");
+            $('#LastName').val("");
+            $('#UserId').val("");
+            $('#pwd').val("");
+           
+        });
+    });
+
+    function LoadUsers() {
+        $('#tblBody').empty();
+        $('#lstUsers').DataTable().clear();
+        $('#lstUsers').DataTable().destroy();
+
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/Admin/GetList',
+            datatype: JSON,
+            success: function (data) {
+                $('#tblBody').empty();
+                $('#lstUsers').DataTable().clear();
+                $('#lstUsers').DataTable().destroy();
+
+                //Set Columns Width
+                var columnWidth = [
+                    { "width": "70px", "targets": [0] }, // First Name
+                    { "width": "60px", "targets": [1] }, // Last Name
+                    { "width": "60px", "targets": [2] }, //  Type
+                    { "targets": [3] }, // Sign In Id
+                ];
+                ToggleDataList(true);
+                MakeMeGrid('lstUsers', data.lstUsers, 0, columnWidth, true, true);
+            },
+        });
+    }
+
+    function LoadRights() {
+
+        $('#lstRights').DataTable().clear();
+        $('#lstRights').DataTable().destroy();
+
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/Admin/GetRights',
+            datatype: JSON,
+            success: function (data) {
+
+                $('#lstRights').DataTable().clear();
+                $('#lstRights').DataTable().destroy();
+
+                //Set Columns Width
+                var columnWidth = [
+                    { "targets": [0] }, // Check
+                    { "target": [1] },
+                    {
+                        "targets": 0,
+                        "data": null,
+                        "defaultContent": '<input type="checkbox"/>',
+                       
+                    },
+                      { "className": "text-right", "targets": 12 },
+                ];
+                ToggleDataList(true);
+                MakeMeFrameGrid('lstRights', data.lstRights, 478, columnWidth, true, true);
+            },
+        });
+    }
+
+    function LoadRights(lstRights, Rights) {
+
+        $('#lstRights').DataTable().clear();
+        $('#lstRights').DataTable().destroy();
+
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/Admin/GetRights',
+            datatype: JSON,
+            success: function (data) {
+
+                $('#lstRights').DataTable().clear();
+                $('#lstRights').DataTable().destroy();
+
+                //Set Columns Width
+                var columnWidth = [
+                    { "width": "20px", "targets": [0] }, // Check
+                    { "width": "100px", "target": [1] },
+                    {
+                        "targets": 0,
+                        "data": null,
+                        "defaultContent": '<input type="checkbox"/>',
+                    }
+                ];
+                ToggleDataList(true);
+                MakeMeFrameGrid('lstRights', data.lstRights, 278, columnWidth, true, true);
+            },
+        });
+    }
+
+
+
+</script>  

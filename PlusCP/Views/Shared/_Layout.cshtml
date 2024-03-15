@@ -1,0 +1,904 @@
+﻿@using CaptchaMvc.HtmlHelpers
+@using CaptchaMvc;
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>SRM</title>
+    @System.Web.Optimization.Styles.Render("~/Content/css")
+
+    <style>
+        .label {
+            padding-left: 20px;
+            font-size: small;
+        }
+        .pd-30 {
+            padding-left: 30px;
+        }
+
+        .form-group {
+            padding: 7px;
+        }
+
+        .modal-header1 {
+            background-color: #325FAB;
+            color: white;
+            text-align: center;
+        }
+
+        .modal-header {
+            background-color: #325FAB;
+            color: white;
+        }
+
+        .button1 {
+            background-color: #47AE50;
+            color: white;
+            border-radius: 3px;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            border: 1px solid transparent;
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 2px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .modal-dialog1 {
+            align-self: center;
+            padding-top: 10%;
+            padding-left: 40%;
+        }
+
+        .modal-content {
+            overflow: visible;
+        }
+
+        .modal-body1 {
+            overflow: auto;
+        }
+
+        /*body {
+            /*background-color: darkslategray;
+            color: lightslategray;
+            overflow: hidden;
+        }*/
+
+        a {
+            cursor: pointer;
+        }
+
+        .margin {
+            margin: 4px;
+            padding-top: 5px;
+            color: white;
+        }
+
+        .modal-width {
+            width: 80%;
+            height: 80%;
+            margin: 50px auto auto auto;
+        }
+
+        .modalcontent {
+            height: 80%;
+            border-radius: 0;
+        }
+
+        .logonUser {
+            margin-top: 8px;
+        }
+
+        .settingIcon {
+            margin-top: 2px;
+        }
+
+        .ribbon {
+            background-color: black;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .skins {
+            margin-top: 5px;
+            padding: 5px;
+        }
+
+        .blueBall {
+            color: #3C8DBC
+        }
+
+        .greenBall {
+            color: #00A65A
+        }
+
+        .redBall {
+            color: #DD4B39
+        }
+
+        .yellowBall {
+            color: #F39C12
+        }
+
+        .aquaBall {
+            color: #00C0EF
+        }
+
+        .nav-padding-middle {
+            padding-top: 8px;
+        }
+
+        .navbar-user-container {
+            width: 100%;
+        }
+        
+
+        .Menu {
+            background-color: #47AE50;
+            color: whitesmoke;
+        }
+
+        .SeaGreenColor {
+            color: #00b3b3;
+        }
+
+        .green {
+            color: #44B254;
+        }
+
+        #message {
+            /*display: none;*/
+            background: #f1f1f1;
+            color: #000;
+            position: relative;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+            #message p {
+                padding: 7px 40px;
+                font-size: 15px;
+                font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+            }
+
+        /* Add a green text color and a checkmark when the requirements are right */
+        .valid {
+            color: green;
+        }
+
+            .valid:before {
+                position: relative;
+                left: -35px;
+                content: "✔";
+            }
+
+        /* Add a red text color and an "x" when the requirements are wrong */
+        .invalid {
+            color: red;
+        }
+
+            .invalid:before {
+                position: relative;
+                left: -35px;
+                content: "✖";
+            }
+        
+        /*.dropdown-menu{
+            height: 350px;
+            overflow: auto;
+        }*/
+
+        .close {
+            font-size: 30px;
+            font-weight: 500;
+            padding-left: 2px;
+            color: #FFFFFF !important;
+            text-shadow: #FFFFFF !important;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue layout-top-nav" onresize="resize_grid_height()" style="overflow:hidden;" onload="get_initial_attributes()">
+    <div class="wrapper">
+        <header class="main-header">
+            <nav class="navbar navbar-static-top" style="border-bottom: solid 3px #325FAB;">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3">
+                        <div class="navbar-header">
+                                <img src="~/Content/Images/SRMLogo.png" style=" margin-left:8px;margin-top:5px; height:40px; margin-bottom:3px;" />
+                            
+                        </div>
+
+
+                        <div class="navbar-header" style="padding-top:14px; margin-left:20px;">
+                            <a onclick="Navigate('Index','/Dashboard/Index', 'Dashboard', 'Dashboard', '', '')">
+                                <i class="fa fa-tachometer-alt green fa-2x"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xs-10 col-md-5">
+                        <div class=" pull-left pd-30" id="IPMnu">
+
+
+                        </div>
+                    </div>
+                    <div class="col-xs-9 col-md-4">
+                        <div class="navbar-custom-menu" style="padding-left: 17px;">
+                            <ul class="nav navbar-nav pull-right nav-padding-middle">
+                                <li style="margin-right:10px; display:none">
+                                    @Html.DropDownList("Connections", null, new { id = "ddlConnection", @name = "ddlConnection", @class = "dropdown-list" })
+                                </li>
+                                <li style="display:none">
+                                    @Html.DropDownList("ddlVendor", null, new { id = "ddlVendor", @name = "ddlVendor", @class = "dropdown-list" })
+                                </li>
+                                <li class="dropdown user user-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class=""><i class="fa fa-user green"></i> Hi @ViewBag.UserName</span>&nbsp;
+                                        <i class="caret"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li style="display:none" class="user-footer">
+                                            <div>
+                                                <a href="~/Home/ChangePassword" class="navbar-user-container"><i class="fa fa-key green"></i> Change Password</a>
+                                            </div>
+                                        </li>
+                                        <li style="display:none">
+                                            @{
+
+                                                if (ViewBag.isAdmin == "True")
+                                                {
+                                                    <div style="padding-left:10px;">
+                                                        <a id="btnUserRoles" class="navbar-user-container" onclick="Navigate('Index','/UserRoleX/Index', 'Roles', 'User Roles', '', '')">
+                                                            <i class="fa fa-user-check green"></i>
+                                                            User Roles
+                                                        </a>
+                                                    </div>
+                                                }
+                                            }
+                                        </li>
+                                        <li class="user-footer">
+
+                                            <div>
+                                                <a href="@Url.Action("Logout","Home")" class="navbar-user-container"><i class="fa fa-sign-out-alt green"></i> Log Out</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
+</nav>
+        </header>
+        <div class="content-wrapper">
+            <div id="renderBody" class="container-fluid">
+                @RenderBody()
+            </div>
+
+            <div id="option" class="modal fade" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <button type="button" class="close full-opacity-hover" data-dismiss="modal">&times;</button>
+                        <div id="modalHeader" class="modal-header option-title">
+                        </div>
+                        <div id="modalBody" class="modal-body">
+                        </div>
+                        @*<div id="modalFooter" class="modal-footer" style="color:gray; font-size:11px; text-align:left; ">
+                            <span id="designedby"></span>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+
+            
+            <div id="wait" style="width:100%;height:100%;left:0px;top:0px; text-align:center; vertical-align:middle" class="modal">
+                <img src='~/Content/images/Loading.gif' width="100" height="100" style="text-align:center; vertical-align:middle; margin-top:400px;" />
+            </div>
+        </div>
+    </div>
+
+    @System.Web.Optimization.Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", false)
+
+
+    <div id="comments" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div id="commentsheader" class="modal-header bg-blue-gradient option-title">
+
+                </div>
+                <div id="commentsbody" class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        var mnId = '';
+        LoadMenus();
+
+        function LoadMenus() {
+            var ProgramId = $('#ddlVendor').val();
+            var Program = $("#ddlVendor :selected").text();
+        $.ajax({
+            type: 'GET',
+            url: '/Home/GetMenus',
+            data: {
+                programId: ProgramId,
+                program: Program
+            },
+            datatype: JSON,
+            success: function (data) {
+                if ($.isArray(data)) {
+                    CreateMenuItem(data);
+                }
+                else
+                    $('#renderBody').html(data);
+
+                OpenPage('\\Dashboard\\Index');
+            }
+        });
+    }
+
+        function CreateMenuItem(items) {
+            var conType = $('#ddlConnection  option:selected').val()
+            $.each(items, function (index, column) {
+                var mnuId = column.MnuId;
+                var mnuTitle = column.MnuTitle;
+                var mnuUrl = column.MnuHyperlink;
+                var mnuParent = column.MnuParent;
+                var mnuIcon = column.MnuIcon;
+                var mnuTarget = column.MnuTarget;
+                var rptCode = column.RptCode;
+                var mnuDesc = column.MnuDesc;
+                var rptDesc = column.RptDesc;
+
+                
+                if (conType === "TEST" && mnuId === 5) { }
+                else if (conType === "TRAN" && (mnuId === 67 || mnuId === 68)) { }
+                // top level
+                else {
+                    if (mnuParent === "" && mnuUrl === "") {
+                        html = "<div  id='liParent" + mnuId + "' class='dropdown btn-group nav-padding-middle'>" +
+                            "<a class='btn dropdown-toggle Menu' title='" + mnuTitle + "' data-toggle='dropdown' href='#'>" +
+                            "<span> " + mnuTitle + "</span>&nbsp;<i class='caret'></i>" +
+                            "</a><div style='height:auto;  max-height: 280px; overflow: auto; width: max-content;' id='" + mnuId + "' class='dropdown-menu'></div></div>";
+                        $('#IPMnu').append(html);
+
+                    }
+                    // sub level
+                    else if (mnuParent !== "" && mnuUrl === "") {
+                        html = "<a id='liParent" + mnuId + "' class='dropdown-header' href='#'>" +
+                            "<span class='h4'>" + mnuTitle + "</span>" +
+                            "<div id='" + mnuId + "' class='list-group'></div></a>";
+                        $('#' + mnuParent).append(html);
+
+                    }
+                    // item level
+                    else {
+                        html = '<a class="list-group-item" id="' + mnuId + '" ' +
+                            'title="' + rptDesc + '" ' + '" onclick="Navigate(\'' + mnuTarget
+                            + '\', \'' + mnuUrl + '\',\'' + rptCode + '\',\'' + column.MnuTitleShort + '\',\''
+                            + column.DesignedBy + '\');" >' + mnuTitle + '</a>';
+                        $('#' + mnuParent).append(html);
+                    }
+                }
+
+            });
+        }
+        
+        $('#ddlVendor').change(function () {
+            var ProgramId = $('#ddlVendor').val();
+            var Program = $("#ddlVendor :selected").text();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/ChangeDfltVendor',
+                data: {
+                    ProgramId: ProgramId,
+                    program: Program
+                },
+                success: function (data) {
+                    $('#IPMnu > div').remove();
+                    location.reload();
+                    LoadMenus();
+                },
+                fail: function () {
+                    alert('fail');
+                },
+                error: function (r) {
+                    alert('error');
+                }
+            });
+            $('#ddlVendor').blur();
+            OpenPage('\\Dashboard\\Index');
+        });
+        //-----Added By Muhammad Junaid For DB Connection-----//
+        //-----Start
+        //$('#ddlConnection').change(function () {
+        //    $.ajax({
+        //        type: 'POST',
+        //        url: '/Home/ChangeDBConnection',
+        //        data: {
+        //            conType: $('#ddlConnection').val()
+        //        },
+        //        datatype: JSON,
+        //        success: function (data) {
+        //            $('#IPMnu > li ~ li').remove();
+
+        //        }
+        //    });
+        //    $('#ddlConnection').blur();
+        //    OpenPage('\\Dashboard\\Index');
+
+        //});
+         //-----end
+
+        $('#ddlConnection').change(function () {
+            
+            var conType = $("#ddlConnection :selected").text();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/ChangeDBConnection',
+                data: { conType: conType },
+                success: function (data) {
+                    $('#ddlConnection').blur();
+                    $('#IPMnu').empty();
+                    LoadMenus();
+                    //OpenPage('\\Dashboard\\Index');
+                },
+                fail: function () {
+                    alert('fail');
+                },
+                error: function (r) {
+                    alert('error');
+                }
+
+            });
+        });
+        $('#MsgAlert').modal({
+            backdrop: false,
+            show: false
+        });
+
+        $('#MsgAlert').on('shown.bs.modal', function () {
+            $('#MsgbtnNo').focus();
+        });
+
+        @*//-----For Change Password-----//
+
+        var isValidPwd;
+        var isLowerCase;
+        var isUpperCase;
+        var isNumber;
+        var isMaxLenth;
+        var isSpecialChar;
+
+        var letter = document.getElementById("letter");
+        var capital = document.getElementById("capital");
+        var number = document.getElementById("number");
+        var length = document.getElementById("length");
+        var specialChar = document.getElementById("specialChar");
+        var newpwd = document.getElementById("newPwd");
+
+        $("#newPwd").on('keypress', function () {
+            if (event.keyCode == 32) {
+                return false;
+            }
+        });
+
+            $("#newPwd").on('keyup', function () {
+            validatePassword();
+
+        });
+        function validatePassword() {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if (newPwd.value.match(lowerCaseLetters)) {
+            letter.classList.remove("invalid");
+            letter.classList.add("valid");
+            isLowerCase = true;
+        } else {
+            isLowerCase = false;
+            letter.classList.remove("valid");
+            letter.classList.add("invalid");
+        }
+
+        //  // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if (newPwd.value.match(upperCaseLetters)) {
+            capital.classList.remove("invalid");
+            capital.classList.add("valid");
+            isUpperCase = true;
+        } else {
+            isUpperCase = false
+            capital.classList.remove("valid");
+            capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if (newPwd.value.match(numbers)) {
+            number.classList.remove("invalid");
+            number.classList.add("valid");
+            isNumber = true;
+        } else {
+            isNumber = false;
+            number.classList.remove("valid");
+            number.classList.add("invalid");
+        }
+
+        // Validate length
+        if (newPwd.value.length >= 8) {
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+            isMaxLenth = true;
+        } else {
+            isMaxLenth = false;
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
+
+        var specialChars = /[?=.*[!#$%&?@@]/;
+        if (newPwd.value.match(specialChars)) {
+            specialChar.classList.remove("invalid");
+            specialChar.classList.add("valid");
+            isSpecialChar = true;
+        } else {
+            isSpecialChar = false;
+            specialChar.classList.remove("valid");
+            specialChar.classList.add("invalid");
+        }
+    }
+
+        function PasswordIsValid() {
+
+            if (isLowerCase == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            if (isUpperCase == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            if (isNumber == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            if (isMaxLenth == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+            if (isSpecialChar == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            var oldPwd = $('#oldPwd').val();
+            var newPwd = $("#newPwd").val();
+            var confirmPwd = $('#confirmPwd').val();
+
+            if (newPwd == oldPwd) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Old and new password cannot be same.');
+                return false;
+            }
+            if (oldPwd.length == 0) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Enter old password.');
+                return false;
+            }
+
+            if (newPwd.length == 0) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Enter new password.');
+                return false;
+            }
+
+            if (confirmPwd.length == 0) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Enter confirm password.');
+                return false;
+            }
+
+            if (newPwd != confirmPwd) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Password does not match.');
+                return false;
+            }
+
+            return true;
+        }
+
+        $(".button1").click(function () {
+            var retVal = PasswordIsValid();
+            if (retVal == true) {
+                var oldPwd = $('#oldPwd').val();
+                var newPwd = $("#newPwd").val();
+                var confirmPwd = $('#confirmPwd').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/ChangeNewPassword',
+                    data: { oldPwd: oldPwd, newPwd: newPwd, confirmPwd: confirmPwd },
+                    success: function (data) {
+                        if ('@ViewBag.ErrMessage' != "") {
+                        $('#lblMsg').append('@ViewBag.ErrMessage');
+                            return;
+                        }
+                        $('#lblMsg').empty();
+                        $('#oldPwd').val = '';
+                        $("#newPwd").val = '';
+                        $('#confirmPwd').val = '';
+                        $('#lblMsg').append(data);
+                        if (data == "Password has been reset.") {
+                            $('#lblMsg').addClass('SeaGreenColor');
+                            window.location.href = '@Url.Action("Logout","Home")';
+                        }
+                        else
+                            $('#lblMsg').removeClass('SeaGreenColor');
+                    },
+                    fail: function () {
+                        alert('fail');
+                    },
+                    error: function (r) {
+                        alert('error');
+                    }
+                });
+            }
+        });
+
+         $(".btnClose").click(function () {
+
+             $("#oldPwd").val('');
+             $("#newPwd").val('');
+             $("#confirmPwd").val('');
+             $('#lblMsg').empty();
+             validatePassword();
+         });*@
+         @*//-----For Change Password-----//
+
+        var isValidPwd;
+        var isLowerCase;
+        var isUpperCase;
+        var isNumber;
+        var isMaxLenth;
+        var isSpecialChar;
+
+        var letter = document.getElementById("letter");
+        var capital = document.getElementById("capital");
+        var number = document.getElementById("number");
+        var length = document.getElementById("length");
+        var specialChar = document.getElementById("specialChar");
+        var newpwd = document.getElementById("newPwd");
+
+        $("#newPwd").on('keypress', function () {
+            if (event.keyCode == 32) {
+                return false;
+            }
+        });
+
+            $("#newPwd").on('keyup', function () {
+            validatePassword();
+
+        });
+        function validatePassword() {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if (newPwd.value.match(lowerCaseLetters)) {
+            letter.classList.remove("invalid");
+            letter.classList.add("valid");
+            isLowerCase = true;
+        } else {
+            isLowerCase = false;
+            letter.classList.remove("valid");
+            letter.classList.add("invalid");
+        }
+
+        //  // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if (newPwd.value.match(upperCaseLetters)) {
+            capital.classList.remove("invalid");
+            capital.classList.add("valid");
+            isUpperCase = true;
+        } else {
+            isUpperCase = false
+            capital.classList.remove("valid");
+            capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if (newPwd.value.match(numbers)) {
+            number.classList.remove("invalid");
+            number.classList.add("valid");
+            isNumber = true;
+        } else {
+            isNumber = false;
+            number.classList.remove("valid");
+            number.classList.add("invalid");
+        }
+
+        // Validate length
+        if (newPwd.value.length >= 8) {
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+            isMaxLenth = true;
+        } else {
+            isMaxLenth = false;
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
+
+        var specialChars = /[?=.*[!#$%&?@@]/;
+        if (newPwd.value.match(specialChars)) {
+            specialChar.classList.remove("invalid");
+            specialChar.classList.add("valid");
+            isSpecialChar = true;
+        } else {
+            isSpecialChar = false;
+            specialChar.classList.remove("valid");
+            specialChar.classList.add("invalid");
+        }
+    }
+
+        function PasswordIsValid() {
+
+            if (isLowerCase == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            if (isUpperCase == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            if (isNumber == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            if (isMaxLenth == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+            if (isSpecialChar == false) {
+                document.getElementById("message").style.display = "block";
+                return false
+            }
+
+            var oldPwd = $('#oldPwd').val();
+            var newPwd = $("#newPwd").val();
+            var confirmPwd = $('#confirmPwd').val();
+
+            if (newPwd == oldPwd) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Old and new password cannot be same.');
+                return false;
+            }
+            if (oldPwd.length == 0) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Enter old password.');
+                return false;
+            }
+
+            if (newPwd.length == 0) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Enter new password.');
+                return false;
+            }
+
+            if (confirmPwd.length == 0) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Enter confirm password.');
+                return false;
+            }
+
+            if (newPwd != confirmPwd) {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Password does not match.');
+                return false;
+            }
+
+            return true;
+        }
+
+        $(".button1").click(function () {
+            var retVal = PasswordIsValid();
+            if (retVal == true) {
+                var oldPwd = $('#oldPwd').val();
+                var newPwd = $("#newPwd").val();
+                var confirmPwd = $('#confirmPwd').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/ChangeNewPassword',
+                    data: { oldPwd: oldPwd, newPwd: newPwd, confirmPwd: confirmPwd },
+                    success: function (data) {
+                        if ('@ViewBag.ErrMessage' != "") {
+                        $('#lblMsg').append('@ViewBag.ErrMessage');
+                            return;
+                        }
+                        $('#lblMsg').empty();
+                        $('#oldPwd').val = '';
+                        $("#newPwd").val = '';
+                        $('#confirmPwd').val = '';
+                        $('#lblMsg').append(data);
+                        if (data == "Password has been reset.") {
+                            $('#lblMsg').addClass('SeaGreenColor');
+                            window.location.href = '@Url.Action("Logout","Home")';
+                        }
+                        else
+                            $('#lblMsg').removeClass('SeaGreenColor');
+                    },
+                    fail: function () {
+                        alert('fail');
+                    },
+                    error: function (r) {
+                        alert('error');
+                    }
+                });
+            }
+        });
+
+         $(".btnClose").click(function () {
+
+             $("#oldPwd").val('');
+             $("#newPwd").val('');
+             $("#confirmPwd").val('');
+             $('#lblMsg').empty();
+             validatePassword();
+         });*@
+
+
+
+        //----END-----//
+    </script>
+</body>
+</html>
+<script type="text/javascript">
+    var isAdmin = '@ViewBag.isAdmin';
+    var old_browser_height = 0;
+    function resize_grid_height() {
+        var new_browser_height = window.innerHeight;
+        var grid_height = $('.dataTables_scrollBody').height();
+        if (isNaN(grid_height)) {
+            return;
+        }
+        if (new_browser_height > old_browser_height) {
+            var difference = new_browser_height - old_browser_height;
+            grid_height += difference;
+        }
+        else {
+            var difference = old_browser_height - new_browser_height;
+            grid_height -= difference;
+        }
+        $('.dataTables_scrollBody').css('height', grid_height + 'px');
+        old_browser_height = new_browser_height;
+    }
+    function get_initial_attributes() {
+        old_browser_height = window.innerHeight;
+    }
+</script>

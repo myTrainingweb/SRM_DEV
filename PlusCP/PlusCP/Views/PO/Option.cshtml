@@ -1,0 +1,80 @@
+﻿@model PlusCP.Models.PO
+    @{
+        ViewBag.Title = "Option";
+        Layout = null;
+    }
+    <style>
+        .pad {
+            width: 260px;
+        }
+
+        .modal-header {
+            background-color: #325FAB;
+        }
+
+        .dateFont {
+            font-size: medium;
+            padding-left: 6px !important;
+        }
+    </style>
+    <table class="fullWidth">
+        <tr>
+            <td class="pad" colspan="4">
+                <label>PO Status:</label>
+                @Html.DropDownList("POStatus", new List<SelectListItem>
+                    {
+
+                       new SelectListItem{ Text="Pending", Value = "Pending",  },
+                       new SelectListItem{ Text="Awaiting Response", Value = "Awaiting Response" },
+                       new SelectListItem{ Text="All Open", Value = "All Open" },
+                       new SelectListItem{ Text="Late", Value = "Late" },
+                       new SelectListItem{ Text="Radar", Value = "Radar" },
+                       new SelectListItem{ Text="Shipped", Value = "Shipped" },
+                       new SelectListItem{ Text="Completed", Value = "Completed" }
+
+
+                    }, new { @class = "form-control" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+                <div id="errMsg" class="optionMsg" style=" margin-left:20px" align="center">
+                </div>
+            </td>
+        </tr>
+
+    </table>
+    <table width="100%">
+        <tr>
+            <td align="center">
+                <div id="lblMsg" class="optionMsg">
+                </div>
+            </td>
+            <td width="70" align="right">
+                <a id="btnGo" role="button" class="btn" style="background-color:#325FAB; color:white">Confirm</a>
+            </td>
+            <td width="100" align="center">
+                <a id="btnCancel" data-dismiss="modal" class="cancel">Cancel</a>
+            </td>
+        </tr>
+    </table>
+    <script>
+        $('#btnGo').click(function () {
+           
+                Go();
+           
+        });
+
+        function Go() {
+        $('#errMsg').empty();
+        $('#lblMsg').empty();
+            var POStatus = $("#POStatus option:selected").val();
+      
+
+        $('#option').modal('hide');
+       
+            OpenPage('\\PO\\Index?POStatus=' + POStatus + '&menuTitle= Purchase Order' + '&rptCode=' + '@Request.QueryString["rptCode"]');
+
+    }
+    </script>

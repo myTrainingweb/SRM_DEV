@@ -1,0 +1,152 @@
+﻿.qty {
+    text-align: right;
+    width: 70px;
+}
+
+.dateformat {
+    text-align: right;
+    width: 80px;
+}
+
+.cost {
+    text-align: right;
+    width: 70px;
+}
+
+.singleCharacter {
+    text-align: center;
+    width: 50px;
+}
+
+.location {
+    width: 90px;
+}
+
+.serialNumber {
+    width: 150px;
+}
+
+.orderNo {
+    width: 100px;
+}
+
+.itemModel {
+    width: 120px;
+}
+
+.datetimeformat {
+    width: 110px;
+    text-align: right;
+}
+
+.customer {
+    width: 150px;
+}
+
+.vendor {
+    width: 50px;
+}
+
+.buyer {
+    width: 60px;
+}
+
+
+.addedBy {
+    width: 90px;
+    text-align:left;
+}
+
+.removedBy {
+    width: 120px;
+}
+
+.passFail {
+    width: 30px;
+    text-align: center;
+}
+
+.symptom {
+    width: 150px;
+}
+
+.defect {
+    width: 200px;
+}
+
+.pcname {
+    width: 70px;
+}
+
+.stepnumber {
+    width: 70px;
+}
+
+.passto {
+    width: 100px;
+}
+
+.failto {
+    width: 100px;
+}
+
+.unitqty {
+    width: 50px;
+    text-align: right;
+}
+
+.model {
+    width: 100px;
+}
+
+.item {
+    width: 100px;
+}
+
+.mtrlAnalysis {
+    width: 120px;
+}
+
+.dmlbtn {
+    width: 40px;
+    text-align: center;
+}
+
+.partNo {
+    width: 100px
+}
+
+.Lt {
+    width: 30px;
+    text-align: right;
+}
+
+.type {
+    width: 30px;
+    text-align: center;
+}
+
+.partDesc {
+    width: 100px;
+}
+
+.PONo {
+    width: 50px;
+}
+
+.POLine {
+    width: 30px;
+    text-align: right;
+}
+
+.PORel {
+    width: 30px;
+    text-align: right;
+}
+
+.XCSCost {
+    border-right-width: 1px;
+    text-align: right;
+    width: 110px;
+}
+

@@ -1,0 +1,242 @@
+﻿@model PlusCP.Models.RO
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<div id="parentDiv" class="container-fluid">
+
+    <div id="dataList" class="box panel panel-default">
+        <div class="box-header with-border bg-blue-gradient">
+            @{
+                if (ViewBag.Option == "op")
+                {
+                    <button type="button" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                        <span class="fa fa-filter fa-lg white"></span>
+                    </button>
+                    <input id="rptCode" type="hidden" value="001" />
+                    <input id="rptTitle" type="hidden" value="@ViewBag.ReportTitle" />
+                }
+                else
+                {
+                    <button type="button" id="opp" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                        <span class="fa fa-filter fa-lg white"></span>
+                    </button>
+                    <input id="rptCode" type="hidden" value="001" />
+                    <input id="rptTitle" type="hidden" value="@ViewBag.ReportTitle" />
+                }
+            }
+            <h6 class="box-title"><strong>@ViewBag.ReportTitle Summary > </strong><strong id="filterString"></strong></h6>
+            <div id="buttons" class="box-tools pull-right">
+
+            </div>
+        </div>
+
+        <div class="box-body" id="lstP" @*style="height:88%"*@>
+            <table id="lstROH" class="table table-bordered table-striped text-sm table-hover" BORDER=1 CELLSPACING=0 CELLPADDING=0 style="width:100%">
+                <thead class="sorted-asc">
+                    <tr>
+
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+
+                        <th></th>
+                        <th></th>
+
+
+                    </tr>
+
+                </thead>
+                <tbody id="tblBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>Total :</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    ToggleDataList(false);
+    LoadData();
+    function LoadData() {
+        $('#tblBody').empty();
+        //$('#lstSO').DataTable().clear();
+        //$('#lstSO').DataTable().destroy();
+
+        $('#option').modal('hide');
+        var isSingleRow = false;
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        var isAllDate = $('#isAllDate').is(':checked');
+        var custRef = $('#custRef').val();
+        //var program = $('#ddlProgram option:selected').text();
+        //var programId = $('#ddlProgram option:selected').val();
+        var status = '@Request.QueryString["status"].ToString()';
+
+        var statusId ='@Request.QueryString["statusId"].ToString()';
+
+
+        //For Multiple Status
+        //var statusId = '';
+        //var status = '';
+        var routeLoc = '@ViewBag.Option';
+        if (routeLoc == "op") {
+            if (selectedParts == "All") {
+                status = "All";
+                statusId = ""
+            }
+            else {
+                $('#lstStatus :selected').each(function (i, sel) {
+                    if (i == 0) {
+                        statusId = "'" + ($(sel).val()) + "'";
+                        status = ($(sel).text());
+                    }
+                    else {
+                        statusId += "," + "'" + ($(sel).val()) + "'";
+                        status = "Multiple";
+                    }
+                });
+            } }
+
+
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/RO/GetROH',
+            data: {
+                frmDt: fDate,
+                toDate: tDate,
+                isAllDate: isAllDate,
+                custRef: custRef,
+                //program: program,
+                //programId: programId,
+                statusId: statusId,
+                status: status,
+                type:'@ViewBag.ReportTitle1'
+            },
+            datatype: JSON,
+            success: function (data) {
+                $('#filterString').append(data.filterString);
+                //$('#lstSO').DataTable().clear();
+                //$('#lstSO').DataTable().destroy();
+
+                var columnDef = [
+                    { "data": "ID", "title": "ID", "width": "40px", "visible": false },
+                    { "data": "Program", "title": "Program", "width": "50px" },
+
+                    {
+                        "data": "CustomerReference", "title": "Customer Ref.", "width": "120px",
+                         render: function (data, type, row) {
+                        var d = data.toString();
+                        var formId = "partInquiryForm_" + row["Id"] + "_" + row["CustomerReference"];
+                             var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                            '<input type="hidden" name="Id" value="' + row["ID"] + '">' +
+                            '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                            '<input type="hidden" name="page" value="list">' +
+                            '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + d + '</a>' +
+                            '</form>';
+                        return html;
+
+                    }
+                                },
+                    { "data": "ThirdPartyReference", "title": "Third Party Ref.", "width": "120px" },
+                    { "data": "Status", "title": "Status", "width": "70px" },
+                    { "data": "OrderType", "title": "Order Type", "width": "80px" },
+                    { "data": "Address", "title": "Address"},
+                    { "data": "City", "title": "City", "width": "70px" },
+                    { "data": "State", "title": "State", "width": "50px" },
+                    { "data": "Country", "title": "Country", "width": "50px" },
+                    { "data": "Zip", "title": "Zip Code", "width": "50px" },
+                    {
+                        "data": "QtyToRcv", "title": "To Recv.", "width": "50px", "className": "text-right"
+                        , render: $.fn.dataTable.render.number(',', ' ')
+                    },
+                    {
+                        "data": "RcvQty", "title": "Rcvd", "width": "50px", "className": "text-right"
+                        , render: $.fn.dataTable.render.number(',', ' ')
+                    },
+                    {
+                        "data": "Pending", "title": "Pending Recv.", "width": "80px", "className": "text-right"
+                        , render: $.fn.dataTable.render.number(',', ' ')
+                    },
+                    { "data": "Username", "title": "Created By", "width": "110px" },
+                    {
+                        "data": "CreatedOn", "title": "Created On", "width": "90px", "className": "text-right",
+
+                    },
+                    {
+                        "data": "LastActivityOn", "title": "Last Activity On", "width": "90px", "className": "text-right",
+
+                    }
+                ]
+
+
+
+                ToggleDataList(true);
+                //For Displaying  Footer Sum
+                var footerfunc = function () {
+                    var api = this.api();
+                    $(api.column(11).footer()).html(thousands_separators(api.column(11, { search: 'applied' }).data().sum()));
+                    $(api.column(12).footer()).html(thousands_separators(api.column(12, { search: 'applied' }).data().sum()));
+                    $(api.column(13).footer()).html(thousands_separators(api.column(13, { search: 'applied' }).data().sum()));
+
+                }
+                //MakeDataGrid('lstROH', data.lstROH, 0, columnDef, true, true, footerfunc);
+                MakeDataGridIP('lstROH', data.lstROH, 0, columnDef, true, true, footerfunc);
+                if (data["ErrorMessage"] != null) {
+                    $('.dataTables_empty > p').text(data["ErrorMessage"]);
+                }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+
+
+    }
+    $(document).ready(function () {
+
+        $("#opp").click(function () {
+
+
+            Navigate('option', '\\RO\\Option','001','Receive Orders','Specd by: Abbas Arsiwala @@ Reconext &amp; Designed by: Mohsin Saleem @@ WinIT','mailto:kashif@winit.biz?cc=mohsin@winit.biz;Tahir@winit.biz&amp;subject=Received Order - Detail Report');
+
+        });
+
+    });
+</script>
+

@@ -1,0 +1,231 @@
+﻿@model PlusCP.Models.Image
+@{
+    ViewBag.Title = "Option";
+    Layout = null;
+}
+
+<style>
+    .pad {
+        padding-bottom: 7px;
+        padding: 2px;
+        padding-top: 7px;
+    }
+</style>
+<table class="fullWidth" cellpadding="10" cellspacing="10">
+    <tr>
+        <td colspan="4" class="pad">
+            @*@Html.LabelFor(model => model.program, htmlAttributes: new { @class = "col-4 col-form-lable" })
+                @Html.DropDownList("ddProgram", null, new { id = "ddProgram", @name = "ddProgram", @class = "form-control", @onkeydown = "GoOnEnter()" })*@
+
+        </td>
+    </tr>
+    <tr>
+        <td class="pad">
+            <strong>From:</strong>
+            <div class='input-group date' id='dtpFrom'>
+                @Html.TextBoxFor(model => model.fromDt, htmlAttributes: new { @class = "form-control" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </td>
+        <td class="pad">
+            <strong>To:</strong>
+            <div class='input-group date' id='dtpTo'>
+                @Html.TextBoxFor(model => model.toDt, htmlAttributes: new { @class = "form-control" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </td>
+        <td cclass="dateFont ">
+            <div class="padding-top-6">
+                <br />
+                <label for="_DockAllDate" style="margin-left:0px">
+
+                    <input type="checkbox" id="checkAllDate" name="DockAllDate" onclick="EnableDisableOrdCreat_1(this)" />
+                    All
+                </label>
+            </div>
+        </td>
+    </tr>
+    <tr class="padding-top-6">
+        <td colspan="4" class="pad">
+            @Html.LabelFor(model => model.serialNo, new { @class = "col-4 col-form-label" })
+            <input placeholder="Enter serial number(s), separated by commas" type="text" class="form-control" id="serialNo" name="serialNo" autofocus
+                   onkeydown="GoOnEnter()" />
+        </td>
+    </tr>
+</table>
+<br />
+<table width="100%">
+    <tr>
+        <td align="center">
+            <div id="lblMsg" class="optionMsg">
+            </div>
+        </td>
+        <td width="70" align="right">
+            <a id="btnGo" role="button" class="btn btn-primary">Confirm</a>
+        </td>
+        <td width="100" align="center">
+            <a id="btnCancel" data-dismiss="modal" class="cancel">Cancel</a>
+        </td>
+    </tr>
+</table>
+<input id="rptcode" type="hidden" value='@Request.QueryString["rptCode"]' />
+<script>
+
+    $('#option').on('shown.bs.modal', function () {
+        $('#serialNo').focus();
+    });
+    function EnableDisableOrdCreat_1(checkAllDate) {
+
+        var checkAllDate = $('#checkAllDate').is(':checked');
+
+        if (checkAllDate === true) {
+            document.getElementById("fromDt").disabled = true;
+            var nodes1 = document.getElementById("fromDt").getElementsByTagName('*');
+            document.getElementById("toDt").disabled = true;
+            var nodes1 = document.getElementById("toDt").getElementsByTagName('*');
+            for (var i = 0; i < nodes1.length; i++) {
+                nodes1[i].disabled = checkAllDate;
+            }
+        }
+        else if (checkAllDate === false) {
+            document.getElementById("fromDt").disabled = false;
+            var nodes1 = document.getElementById("fromDt").getElementsByTagName('*');
+            document.getElementById("toDt").disabled = false;
+            var nodes1 = document.getElementById("toDt").getElementsByTagName('*');
+            for (var i = 0; i < nodes1.length; i++) {
+                nodes1[i].disabled = checkAllDate;
+            }
+        }
+    };
+    $('#serialNo').on("change", function () {
+        if (this.val != '') {
+             $('#lblMsg').empty();
+        }
+    })
+    function textBoxValidation() {
+        $('#lblMsg').empty();
+
+
+        var textBoxId = $('#serialNo').val();
+
+        if ($('#checkAllDate').is(':checked') && textBoxId === '') {
+
+                $('#lblMsg').append('Please input Serial No.');
+                return false;
+        }
+        else {
+            $('#lblMsg').empty();
+            return true;
+        }
+
+    }
+    function GoOnEnter() {
+        if (event.keyCode == 13) {
+            var retVal = OptionsIsValid();
+            if (retVal == true) {
+                Go();
+            }
+        }
+    }
+    $('#btnGo').click(function () {
+        var retVal = OptionsIsValid();
+
+        if (retVal == true) {
+            Go();
+        }
+    });
+
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    //For Date Picker
+    dateFrom();
+    dateTo();
+    function dateFrom() {
+        var newdate = new Date();
+        newdate.setDate(1);
+
+        var dd = ('0' + newdate.getDate()).slice(-2);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+
+        document.getElementById('fromDt').value = someFormattedDate;
+    }
+
+    function dateTo() {
+        var newdate = new Date();
+
+        var dd = ('0' + newdate.getDate()).slice(-2);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+
+        document.getElementById('toDt').value = someFormattedDate;
+
+    }
+
+    $("#dtpTo, #dtpFrom").datepicker({
+        format: 'yyyy.mm.dd',
+        autoclose: true,
+        startDate: '-365d',
+        endDate: maxDate
+    });
+
+    function isDate(txtDate) {
+        if (txtDate.length != 10) {
+            return false;
+        }
+        if (txtDate.substring(4, 5) !== '.' || txtDate.substring(7, 8) !== '.') {
+            return false;
+        }
+        return true;
+    }
+
+    function OptionsIsValid() {
+
+        $('#lblMsg').empty();
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+
+        if (fDate.length <= 0 || tDate.length <= 0 || !isDate(fDate) || !isDate(tDate) || fDate > tDate) {
+            $('#lblMsg').append('Enter a valid date');
+            return false;
+        }
+        
+        var retValue = textBoxValidation();
+        if (retValue != true) {
+            return false;
+        }
+        else {
+            $('#lblMsg').empty();
+            return true;
+        }
+    }
+
+    function Go() {
+
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        var serialNo = $('#serialNo').val();
+        var checkAllDate = $('#checkAllDate').is(':checked');
+
+        $('#option').modal('hide');
+
+        OpenPage('\\Image\\Index?fromDt=' + fDate + ' &toDt=' + tDate + '&serialNo=' + serialNo + '&checkAllDate=' + checkAllDate + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+    }
+</script>
+
+

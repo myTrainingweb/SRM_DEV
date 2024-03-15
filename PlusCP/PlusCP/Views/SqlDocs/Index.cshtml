@@ -1,0 +1,245 @@
+﻿@model PlusCP.Models.SqlDocs
+@{
+    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+
+}
+<style>
+    .container-fluid {
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+
+    .col-sm-9 {
+        padding-right: 3px !important;
+    }
+
+    .col-sm-3 {
+        padding-left: 3px !important;
+    }
+
+    .box {
+        box-shadow: 0px 0px 0px 0px !important;
+    }
+
+    .errorMsg {
+        padding: 5px;
+    }
+
+    #toast {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 75%;
+        font-size: 17px;
+    }
+
+        #toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+</style>
+
+@{
+    //string rptCode = Request.QueryString["rptCode"];
+    //string rptTitle = Request.QueryString["rptTitle"];
+    /*
+     if (rptCode == "undefined")
+     {
+         <h5 class="errorMsg">SQL Documentation is not ready for this report</h5>
+     }
+     else
+     {*/
+    <div id="parentDiv" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="box-header with-border bg-blue-gradient">
+                    <h5 class="box-title">
+                        <strong id="header">SQL Documentation for @TempData["rptTitle"] </strong>
+                    </h5>
+                    <div class="pull-right" style="padding-right:10px;">
+                        <button class="btn btn-default btn-sm pull-right" onclick="copyToClipboard()" style="font-size:10px; margin-top:1px;">
+                            <span class="fa-stack">
+                                <i class="fa fa-circle fa-stack-2x" style="color: rgb(244, 164, 37);"></i><i class="fa fa-copy fa-stack-1x" style="color: white;"></i>
+                            </span>
+                            Copy to Clipboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-9">
+                <pre id="qryBody"></pre>
+            </div>
+            <div class="col-sm-3">
+                <table class="fullWidth" cellpadding="5" cellspacing="5">
+                    <tr>
+                        <td colspan="3">
+                            <textarea id="txtCmnt" placeholder="Type comments here..." typeof="text" class="form-control inputstl" maxlength="1000"></textarea>
+                            <br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <div id="lblMsg" class="optionMsg">
+                            </div>
+                        </td>
+                        <td width="70" align="right">
+                            <button id="submit" role="button" class="btn btn-primary">Add Comments</button>
+                        </td>
+                        <td width="70" align="center">
+                            <button id="Clear" role="button" class="btn btn-primary">Clear</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="dataList" class="box panel panel-default">
+                    <div class="box-header with-border bg-blue-gradient">
+                        <h5 class="box-title"><strong>Blogs</strong></h5>
+                        <div id="buttons" class="box-tools pull-right">
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <table id="lstSqlBlog" class="table-bordered table-striped hover text-sm table-hover" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Copied text to Clipboard</div>
+    // }
+
+}
+
+@section js{
+
+    <script>
+
+        var rptCode =  '@Request.QueryString["rptCode"]'
+        var rptTitle = '@Request.QueryString["rptTitle"]'
+        var isDetail = '@Request.QueryString["isDetail"]'
+        SetHeight('qryBody', 40);
+        SetHeight('txtCmnt', 33);
+        SetHeight('dataList', 47);
+
+        GetQuery();
+
+        $('#submit').click(function () {
+            AddBlog();
+        });
+
+        $('#Clear').click(function () {
+            $('#txtCmnt').val('');
+            $('#lblMsg').empty();
+        });
+
+        function SetHeight(ctrlId, height) {
+            var val = (window.innerHeight * height) / 100;
+            $('#' + ctrlId).height(val);
+        }
+
+        function GetQuery() {
+            $.ajax({
+                type: 'GET',
+                url: '/SqlDocs/GetQuery',
+                datatype: JSON,
+                data: { rptCode: rptCode, rptTitle : rptTitle, isDetail:isDetail },
+                success: function (data) {
+                    $('#qryBody').append(data);
+                    GetBlog();
+                }
+            });
+        }
+
+        function GetBlog() {
+            $('#tblBody').empty();
+            $('#lstSqlBlog').DataTable().clear();
+            $('#lstSqlBlog').DataTable().destroy();
+
+            $.ajax({
+                type: 'GET',
+                url: '/SqlDocs/GetBlog',
+                datatype: JSON,
+                data: { rptCode: rptCode },
+                success: function (data) {
+                    var columnWidth = [
+
+                        { "title": "Comments", "targets": 0 },
+                        { "title": "By", "width": "70px", "targets": 1 },
+                        { "title": "On", "width": "100px", "className": "text-right", "targets": 2}
+                    ];
+                    MakeMeBabyGrid('lstSqlBlog', data, '35%', columnWidth, true, true);
+                }
+            });
+        }
+
+        function AddBlog() {
+            var ctrl = $('#txtCmnt');
+            if (ctrl.val() == '') {
+                $('#lblMsg').empty();
+                $('#lblMsg').append('Comments is required');
+                return false;
+            }
+
+            var cmnt = ctrl.val();
+            $('#lblMsg').empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '/SqlDocs/AddBlog',
+                data: {
+                    rptCode:rptCode,
+                    cmnt: cmnt
+                },
+                datatype: JSON,
+                success: function (data) {
+                    GetBlog();
+                    $('#txtCmnt').val('');
+                }
+            });
+        }
+
+        function copyToClipboard() {
+
+            var element = document.getElementById("qryBody");
+            var $temp = $("<textarea>");
+            $("body").append($temp);
+            $temp.val($(element).text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+
+            showToast();
+        }
+
+        function showToast() {
+            var x = document.getElementById("toast");
+            x.className = "show";
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
+    </script>
+}

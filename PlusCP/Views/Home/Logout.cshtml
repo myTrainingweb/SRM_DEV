@@ -1,0 +1,16 @@
+﻿@{ 
+    ViewBag.Title = "Logout";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+@section js{
+    <script>
+        $(document).ready(function () {
+            window.location.href = '@Url.Action("Login", "Home")'; 
+        });
+    </script>
+}
+
+
+
+

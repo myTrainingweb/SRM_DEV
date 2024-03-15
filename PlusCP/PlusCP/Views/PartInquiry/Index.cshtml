@@ -1,0 +1,135 @@
+﻿@model PlusCP.Models.PartInquiry
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<div id="parentDiv" class="container-fluid">
+    <input id="rptCode" type="hidden" value="002" />
+    <input id="rptTitle" type="hidden" value="@ViewBag.ReportTitle" />
+    <div id="dataList" class="box panel panel-default">
+        <div class="box-header with-border bg-blue-gradient">
+            <button type="button" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                <span class="fa fa-filter fa-lg white"></span>
+            </button>
+            <h6 class="box-title"><strong>@ViewBag.ReportTitle  </strong><strong id="filterString"></strong></h6>
+            <div id="buttons" class="box-tools pull-right">
+
+            </div>
+        </div>
+
+        <div class="box-body" id="lstP">
+            <table id="lstPartInquiry" class="table table-bordered table-striped text-sm table-hover" style="width:100%">
+                <thead class="sorted-asc">
+                    <tr>
+                        <th></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="notexport"></th>
+                        <th></th>
+                        @*<th class="notexport"></th>
+                            <th class="notexport"></th>*@
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                </thead>
+                <tbody id="tblBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+   
+
+    ToggleDataList(false);
+    LoadData();
+    function LoadData() {
+        $('#tblBody').empty();
+        //$('#lstROH').DataTable().clear();
+        //$('#lstROH').DataTable().destroy();
+
+        $('#option').modal('hide');
+
+        var partNo = $('#partNo').val();
+        var isSingleRow = false;
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/PartInquiry/GetList',
+            data: {
+                partNo: partNo
+            },
+            datatype: JSON,
+            success: function (data) {
+                $('#filterString').append(data.filterString);
+                //$('#lstROH').DataTable().clear();
+                //$('#lstROH').DataTable().destroy();
+
+
+                var columnDef = [
+                    { "data": "NAME", "title": "Program", "width": "60px" },
+                    { "data": "ProgramID", "title": "ProgramID", "width": "60px", "visible": false },
+                    {
+                        "data": "PartNo", "title": "Part No.", "width": "130px",
+                        render: function (data, type, row) {
+                            var formId = "partInquiryForm_" + row["PartNo"] + "_" + row["ProgramID"];
+                            var html = '<form id="' + formId + '" method="POST" action="\\PartInquiry\\Detail" target="_blank" style="margin:1px;">' +
+                                '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                '<input type="hidden" name="ProgramId" value="' + row["ProgramID"] + '">' +
+                                '<input type="hidden" name="page" value="list">' +
+                                '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                '</form>';
+                            return html;
+                        }
+                    },
+                    { "data": "Description", "title": "Description" },
+                    { "data": "ManufacturePartNo", "title": "Mfr. Part No.", "width": "120px" },
+                    { "data": "ModelNo", "title": "Model No.", "width": "120px" },
+                    {
+                        "data": "SerialFlag", "title": "Serialized", "width": "60px", "className": "text-center"
+                        //render: function (data, type, row) {
+                        //    if (row["SerialFlag"] == "false") {
+                        //        row["SerialFlag"] == "0"
+                        //    }
+                        //    else {
+                        //        row["SerialFlag"] == "1"
+                        //    }
+                        //}
+                    },
+                    { "data": "PrimaryCommodity", "title": "Primary Comm.", "width": "110px" },
+                    { "data": "SecondaryCommodity", "title": "Secondary Comm.", "width": "100px", "visible": false },
+
+                    { "data": "PartType", "title": "Part Type", "width": "110px" },
+                    // { "data": "CycleCountFlag", "title": "Cycle Count Flag", "width": "90px", "visible": false },
+                    // { "data": "CycleCountPeriod", "title": "Cycle Count Period", "width": "110px", "visible": false },
+                    { "data": "Status", "title": "Status", "width": "50px" },
+                    { "data": "Username", "title": "Created By", "width": "130px" },
+                    { "data": "CreateDate", "title": "Created On", "width": "90px", "className": "text-right" },
+                    { "data": "LastActivityDate", "title": "Last Activity On", "width": "90px", "className": "text-right" }
+                ]
+
+
+
+                ToggleDataList(true);
+                MakeDataGrid('lstPartInquiry', data.lstPartInquiry, 0, columnDef, true, true, false);
+
+                if (data["ErrorMessage"] != null) {
+                    $('.dataTables_empty > p').text(data["ErrorMessage"]);
+                }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+
+
+    }
+</script>

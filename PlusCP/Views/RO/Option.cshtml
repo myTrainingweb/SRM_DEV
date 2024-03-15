@@ -1,0 +1,433 @@
+﻿@model PlusCP.Models.RO
+@{
+    ViewBag.Title = "Option";
+    Layout = null;
+}
+<style>
+    .pad {
+        width: 260px;
+    }
+
+    .modal-header {
+        background-color: #325FAB;
+    }
+    .dateFont {
+        font-size: medium;
+        padding-left: 6px !important;
+    }
+</style>
+<table class="fullWidth">
+    <tr>
+        <td class="pad" colspan="4">
+            <label>Report Type:</label>
+            @Html.DropDownList("rptType", new List<SelectListItem>
+                {
+
+                   new SelectListItem{ Text="Summary", Value = "Summary",  },
+                   new SelectListItem{ Text="Detail", Value = "Detail" },
+                   new SelectListItem{ Text="No WO Units", Value = "WithoutWO" },
+                   new SelectListItem{ Text="Pre-Registered Units", Value = "PreRegisteredUnits" }
+
+
+                }, new { @class = "form-control" })
+        </td>
+    </tr>
+    <tr>
+        <td class="pad" id="ddtpFrom">
+
+            <strong>From:</strong>
+            <div class='input-group date' id='dtpFrom'>
+                @Html.TextBoxFor(model => model.fromDt, htmlAttributes: new { @class = "form-control" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </td>
+        <td class="pad" id="ddtpTo">
+            <strong>To:</strong>
+            <div class='input-group date' id='dtpTo'>
+                @Html.TextBoxFor(model => model.toDt, htmlAttributes: new { @class = "form-control" })
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </td>
+        <td id="AllDate" class="dateFont">
+            <div>
+                <br />
+                <br />
+                <label for="_isAllDate" style="margin-left:0px">
+                    <input type="checkbox" id="isAllDate" name="isAllDate" onclick="EnableDisableOrdCreat(this)" />
+                    All
+                </label>
+            </div>
+        </td>
+    </tr>
+    <tr id="serialNo" class="hidden">
+        <td colspan="4" class="pad">
+            @Html.LabelFor(model => model.serialNo, new { @class = "col-4 col-form-label" })
+            <input type="text" class="form-control" id="serialN" name="serialNo" autofocus
+                   onkeydown="GoOnEnter()" />
+        </td>
+    </tr>
+    <tr id="custRefer">
+        <td colspan="4" class="pad">
+            @Html.LabelFor(model => model.custRef, new { @class = "col-4 col-form-label" })
+            <input type="text" class="form-control" id="custRef" name="custRef" autocomplete="false"
+                   onkeydown="GoOnEnter()" />
+
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+
+            <div id="errMsg" class="optionMsg" style=" margin-left:20px" align="center">
+            </div>
+        </td>
+    </tr>
+
+    <tr id="ddlStatus">
+        <td class="pad" colspan="4">
+
+            @Html.LabelFor(model => model.statusId, htmlAttributes: new { @class = "col-4 col-form-lable" })
+            <div>
+                <select id="lstStatus" multiple="multiple" class="multiselect form-control" name="options[]">
+                    @{
+                        if (Model != null)
+                        {
+                            foreach (var item in Model.lstStatus)
+                            {
+                                <option value="@item[0]">@item[1]</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </td>
+    </tr>
+
+    @*<tr>
+            <td colspan="4" class="pad">
+                @Html.LabelFor(model => model.statusId, htmlAttributes: new { @class = "col-4 col-form-lable" })
+                @Html.DropDownList("ddlStatus", null, new { id = "ddlStatus", @name = "ddlStatus", @class = "form-control", @onkeydown = "GoOnEnter()" })
+                <br />
+            </td>
+
+        </tr>*@
+</table>
+<table width="100%">
+    <tr>
+        <td align="center">
+            <div id="lblMsg" class="optionMsg">
+            </div>
+        </td>
+        <td width="70" align="right">
+            <a id="btnGo" role="button" class="btn" style="background-color:#325FAB; color:white">Confirm</a>
+        </td>
+        <td width="100" align="center">
+            <a id="btnCancel" data-dismiss="modal" class="cancel">Cancel</a>
+        </td>
+    </tr>
+</table>
+<script>
+    function EnableDisableOrdCreat(isAllDate) {
+
+        var isAllDate = $('#isAllDate').is(':checked');
+        document.getElementById("fromDt").disabled = isAllDate;
+        var nodes1 = document.getElementById("fromDt").getElementsByTagName('*');
+        document.getElementById("toDt").disabled = isAllDate;
+        var nodes1 = document.getElementById("toDt").getElementsByTagName('*');
+        for (var i = 0; i < nodes1.length; i++) {
+            nodes1[i].disabled = isAllDate;
+        }
+    };
+
+    function textBoxValidation() {
+        $('#errMsg').empty();
+
+        var custRef = $("#custRef").val();
+        var serialN = $("#serialN").val();
+        var custRefer = $("#custRefer").attr('class');
+        var serialNum = $("#serialNo").attr('class');
+        //console.log(classNames)
+        if ($('#isAllDate').is(':checked') && custRef === '' && custRefer != 'hidden') {
+
+            $('#errMsg').append('Please input the value');
+            return false;
+        }
+        else if ($('#isAllDate').is(':checked') && serialN == '' && serialNum != 'hidden') {
+
+            $('#errMsg').append('Please input the value');
+            return false;
+        }
+        else {
+            $('#errMsg').empty();
+            return true;
+        }
+    }
+    $(document).ready(function () {
+
+        $("#ProgramID").show();
+        $("#ddtpFrom").show();
+        $("#ddtpTo").show();
+        $("#AllDate").show();
+        $("#custRef").show();
+        $("#ddlStatus").removeClass('hidden');
+        $("#rptType").change(function () {
+            var selected_state = document.getElementById("rptType").value;
+            if (selected_state === "Summary") {
+                $('#errMsg').empty();
+                $("#ProgramID").show();
+                $("#ddtpFrom").show();
+                $("#ddtpTo").show();
+                $("#AllDate").show();
+                $("#custRefer").removeClass('hidden');
+                $("#ddlStatus").removeClass('hidden');
+                $("#serialNo").addClass('hidden');
+            }
+            else if (selected_state === "Detail") {
+                $('#errMsg').empty();
+                $("#ProgramID").show();
+                $("#ddtpFrom").show();
+                $("#ddtpTo").show();
+                $("#AllDate").show();
+                $("#custRefer").removeClass('hidden');
+                $("#ddlStatus").removeClass('hidden');
+                $("#serialNo").addClass('hidden');
+            }
+            else if (selected_state === "PreRegisteredUnits") {
+                $('#errMsg').empty();
+                $("#ProgramID").show();
+                $("#ddtpFrom").show();
+                $("#ddtpTo").show();
+                $("#AllDate").show();
+                $("#serialNo").removeClass('hidden');
+                $("#ddlStatus").addClass('hidden');
+                $("#custRefer").addClass('hidden');
+            }
+            else {
+                $('#errMsg').empty();
+                $('#lblMsg').empty();
+                $("#ProgramID").show();
+                $("#ddtpFrom").hide();
+                $("#ddtpTo").hide();
+                $("#AllDate").hide();
+                $("#serialNo").addClass('hidden');
+                $("#custRefer").removeClass('hidden');
+                $("#ddlStatus").addClass('hidden');
+            }
+            //$("#selected_state").children().show(); //only show cities in selected state
+        });
+        $("#lstStatus").change(function () {
+            $('#lblMsg').empty();
+        });
+    });
+    $('#option').on('shown.bs.modal', function () {
+        $('#custRef').focus();
+    });
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    $("#dtpTo, #dtpFrom").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+
+    $('#lstStatus').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'All',
+        buttonWidth: '100%',
+        maxHeight: 300,
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        filterPlaceholder: 'Search',
+        numberDisplayed: 1,
+        templates: {
+            ul: '<ul class="multiselect-container dropdown-menu" style="-ms-overflow-x: hidden; -ms-overflow-y: auto; max-height: 300px; width:100%;">"'
+        },
+
+        buttonText: function (options, select) {
+            if (options.length == 0) {
+                return 'select from list';
+            }
+            else {
+                if (options.prevObject.length == options.length) {
+                    selectedParts = 'All';
+                } else {
+                    selectedParts = '';
+                    options.each(function () {
+                        var label = ($(this).attr('text') !== undefined) ? $(this).attr('text') : $(this).html();
+                        selectedParts += "'" + label + "', ";
+                    });
+                    selectedParts = selectedParts.substr(0, selectedParts.length - 2);
+                }
+
+
+
+                if (options.length > this.numberDisplayed) {
+                    return options.length + ' ' + this.nSelectedText;
+                }
+                else {
+                    var selected = '';
+                    options.each(function () {
+                        var label = ($(this).attr('text') !== undefined) ? $(this).attr('text') : $(this).html();
+                        selected += label + ", ";
+                    });
+                    return selected.substr(0, selected.length - 2);
+                }
+            }
+        }
+    });
+
+
+
+    $('#lstStatus').multiselect('selectAll', false);
+    $("#lstStatus").multiselect('updateButtonText');
+
+    //For Date Picker
+    dateFrom();
+    dateTo();
+    $('#lblMsg').empty();
+    function dateFrom() {
+        var date = new Date();
+        var newdate = new Date(date);
+        //For From Date
+        newdate.setDate(newdate.getDate() - 1);
+        var dd = (newdate.getFullYear(newdate.getMonth()), '0' + 1);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+        document.getElementById('fromDt').value = someFormattedDate;
+    }
+    function dateTo() {
+        var date = new Date();
+        var newdate = new Date(date);
+        //For To Date
+        newdate.setDate(newdate.getDate());
+        var dd = ('0' + newdate.getDate()).slice(-2);
+        var mm = ('0' + (newdate.getMonth() + 1)).slice(-2);
+        var y = newdate.getFullYear();
+        var someFormattedDate = y + '.' + mm + '.' + dd;
+        document.getElementById('toDt').value = someFormattedDate;
+    }
+
+    $("#dtpTo, #dtpFrom").datepicker({
+        format: 'yyyy.mm.dd',
+        autoclose: true,
+        startDate: '-365d',
+        endDate: maxDate
+    });
+
+    function isDate(txtDate) {
+        if (txtDate.length != 10) {
+            return false;
+        }
+        if (txtDate.substring(4, 5) !== '.' || txtDate.substring(7, 8) !== '.') {
+            return false;
+        }
+        return true;
+    }
+    function GoOnEnter() {
+        if (event.keyCode == 13) {
+            var retVal = OptionsIsValid();
+            var retValue = textBoxValidation();
+            if ($("#rptType option:selected").val() == "WithoutWO") {
+                $('#lblMsg').empty();
+                Go();
+            }
+            else {
+                if (retVal == true && retValue == true) {
+                    Go();
+                }
+            }
+        }
+    }
+    $('#btnGo').click(function () {
+        var retVal = OptionsIsValid();
+        var retValue = textBoxValidation();
+        if ($("#rptType option:selected").val() == "WithoutWO") {
+            $('#lblMsg').empty();
+            Go();
+        }
+        else {
+            if (retVal == true && retValue == true) {
+                Go();
+            }
+        }
+    });
+    function OptionsIsValid() {
+        $('#lblMsg').empty();
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        //var status = $('#ddlStatus option:selected').text();
+        var status = $('#lstStatus option:selected').text();
+        if (status == "") {
+            $('#lblMsg').append('Please select status from list');
+            return false;
+        }
+        if (fDate.length <= 0 || tDate.length <= 0 || !isDate(fDate) || !isDate(tDate) || fDate > tDate) {
+            $('#lblMsg').append('Enter a valid date');
+            return false;
+        }
+        else {
+            $('#lblMsg').empty();
+            return true;
+        }
+
+        if (status == null) {
+            $('#lblMsg').empty();
+            $('#lblMsg').append('Something went wrong! Reopen Option Page');
+            return false;
+        }
+        if (status == 'No Data Available') {
+            $('#lblMsg').empty();
+            $('#lblMsg').append('Select Status ');
+            return false;
+        }
+
+        else {
+            $('#lblMsg').empty();
+            return true;
+        }
+    }
+
+
+    function Go() {
+        $('#errMsg').empty();
+        $('#lblMsg').empty();
+        var rptName = $("#rptType option:selected").val();
+        var fDate = $('#fromDt').val();
+        var tDate = $('#toDt').val();
+        var isAllDate = $('#isAllDate').is(':checked');
+        var custRef = $('#custRef').val();
+        var serialNo = $('#serialN').val();
+        //var program_Id = $('#ddlProgram option:selected').text();
+        var status = $('#lstStatus option:selected').text();
+        var statusid = $('#lstStatus option:selected').val();
+        var ProgramName = $("#ProgramID option:selected").text();
+
+        $('#option').modal('hide');
+        if (rptName == 'Summary')
+        {
+            OpenPage('\\RO\\Index?statusId=' + statusid + '&Option=' + 'op' + '&frmDt=' + fDate + '&isAllDate=' + isAllDate +'&rptName=' + rptName + ' &toDate=' + tDate + ' &custRef=' + custRef + '&status=' + status + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+        }
+        else if (rptName == 'Detail')
+        {
+            OpenPage('\\RO\\GetRODetail?statusId=' + statusid + '&Option=' + 'op' + '&frmDt=' + fDate + '&isAllDate=' + isAllDate + '&rptName=' + rptName + ' &toDate=' + tDate + ' &custRef=' + custRef + '&status=' + status + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+        }
+        else if (rptName == 'WithoutWO')
+        {
+            OpenPage('\\RO\\ROWithNoWO?statusId=' + statusid + '&Option=' + 'op' + '&rptName=' + rptName + ' &custRef=' + custRef + '&status=' + status + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+        }
+        else if (rptName == 'PreRegisteredUnits')
+        {
+            OpenPage('\\RO\\PreRegisteredUnit?serialNo=' + serialNo + '&Option=' + 'op' + '&frmDt=' + fDate + '&isAllDate=' + isAllDate + '&rptName=' + rptName + ' &toDate=' + tDate + '&ProgramName=' + ProgramName + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]')
+        }
+        @*OpenPage('\\RO\\Index?statusId=' +statusid+'&Option='+'op'+'&frmDt=' + fDate + ' &toDate=' + tDate + ' &custRef=' + custRef + '&status=' + status + '&menuTitle=' + $('.modal-header').html() + '&rptCode=' + '@Request.QueryString["rptCode"]');*@
+
+    }
+</script>
+
+

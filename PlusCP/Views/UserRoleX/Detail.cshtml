@@ -1,0 +1,611 @@
+﻿@model PlusCP.Models.UserRoleX
+@{
+    ViewBag.Title = "Detail";
+    Layout = null;
+}
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="~/Scripts/bootstrap-dropdown.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>*@
+<style>
+
+
+    .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .Red {
+        color: red;
+    }
+
+    .green {
+        color: green;
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+            <div class="box-header with-border bg-blue-gradient" style="margin-top:1px; margin-left:1px;">
+                <button type="button" class="btn btn-box-tool">
+                    <span class="fa fa-th-list fa-lg white"></span>
+                </button>
+                <h6 class="box-title"><strong>User Permission > For User = @ViewBag.UserName <span><label id="lblUsrInfo" style="color:white;"></label></span> </strong>  </h6>
+            </div>
+
+            <label class="col-lg-2 col-md-2 col-sm-2" style="padding-left:13px;padding-top:25px;">
+
+                <input id="CBisAdmin" type="checkbox">
+                <span class="checkmark"></span>
+                Make Admin
+            </label>
+            <label class="col-lg-2 col-md-2 col-sm-2" style="padding-left:13px;padding-top:25px;">
+
+                <input id="CBisCustomer" type="checkbox">
+                <span class="checkmark"></span>
+                Is Customer
+            </label>
+            @*<label class="col-lg-2 col-md-2 col-sm-2" style="padding-left:13px;padding-top:25px;">
+
+                <input id="CBisActive" type="checkbox">
+                <span class="checkmark"></span>
+                Active
+            </label>*@
+            <div class="col-lg-8 col-md-8 col-sm-8" style="display:flex;padding-left:13px;padding-top:25px;">
+                @Html.LabelFor(model => model.primaryUse, new { style = "margin-top:3px", @class = "col-2 col-form-label" })
+                @Html.TextBoxFor(model => model.primaryUse, new { style = "width:200px;margin-left:3px; padding-bottom:6px; border-radius:5px", id = "primaryUse", @class = "form-control input-sm" })
+                @*<input style="width:200px;" type="text" class="form-control" id="primaryUse" name="primaryUse" autofocus />*@
+            </div>
+
+        </div>
+
+
+
+    </div>
+    @*<div class="row" >
+        
+            <div colspan="2" style="display:flex" >
+                @Html.LabelFor(model => model.primaryUse, new { @class = "col-2 col-form-label" })
+                <input style="width:200px; margin-top:6px;" type="text"  class="form-control" id="primaryUse" name="primaryUse" autofocus />
+            </div>
+
+       
+    </div>*@
+        <div class="row" style="">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="form-group" style="">
+                    <label class="col-form-label">Reports:</label>
+                    <select id="MnuLst" multiple="multiple">
+                        @{
+                            if (Model != null)
+                            {
+                                var groupedItems = Model.FinallstMnu.GroupBy(item => item[2]);
+
+                                foreach (var group in groupedItems)
+                                {
+                                    <optgroup label="@group.Key">
+                                        @foreach (var item in group)
+                                        {
+                                        <option value="@item[0]">@item[1]</option>
+                                        }
+                                    </optgroup>
+                                }
+                            }
+                        }
+                    </select>
+                    @*<select id="MnuLst" multiple="multiple">
+            @{
+                if (Model != null)
+                {
+                    foreach (var item in Model.FinallstMnu)
+                    {
+                        <option value="@item[0]">@item[1]</option>
+                    }
+                }
+            }
+        </select>*@
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="box-body" style="">
+                    <div class="form-group">
+
+                        <label class="col-form-label">Programs:</label>
+                        <select id="ProgramLst" multiple="multiple">
+                            @{
+                                if (Model != null)
+                                {
+                                    foreach (var item in Model.FinallstProgram)
+                                    {
+                                        <option value="@item[0]">@item[1]</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row" style="padding-top:500px;text-align:center;">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group">
+                    <button id="btnUser" class="btn btn-success" type="button" style="border-radius:3px; width:70px;height:25px; font-size:12px; font-weight:bold;" >
+                        Save
+                    </button>
+                    <button id="btnCancel" class="btn" type="button" style="border-radius:3px; width:70px;height:25px; font-size:12px; font-weight:bold;" onclick="Navigate('Index','/UserRoleX/Index', 'Roles', 'User Roles', '', '')">
+                        Cancel
+                    </button>
+                    <div id="lblMsg" class="optionMsg">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<script>
+    LoadData();
+
+    function LoadData() {
+
+        $('#lblMsg').empty();
+        var selectedProgram = '';
+        var selectedMnu = '';
+
+        var _lstProgram = @Html.Raw(Json.Encode(Model.FinallstProgram));
+        var _lstProgramById = @Html.Raw(Json.Encode(Model.lstProgramById));
+        var _lstMnu = @Html.Raw(Json.Encode(Model.FinallstMnu));
+        var _lstMnuById = @Html.Raw(Json.Encode(Model.lstMnuById));
+        var _isAdmin = @Html.Raw(Json.Encode(Model.isAdmin));
+        var _isCustomer = @Html.Raw(Json.Encode(Model.isCustomer));
+        var _isActive=@Html.Raw(Json.Encode(Model.isActiveUser));
+        @*var _primaryUse = @Html.Raw(Json.Encode(Model.primaryUse));*@
+
+        //Dropdown Program
+        selectedProgram = _lstProgramById.length;
+        ddlProgram();
+        i = 0, size = selectedProgram;
+        for (i; i < size; i++) {
+            $("#ProgramLst option[value='" + _lstProgramById[i][0] + "']").attr("selected", 1);
+        }
+        $("#ProgramLst").multiselect("refresh");
+
+
+
+
+        //Menu Dropdown
+        //selectedMnu = _lstMnuById.length;
+        //ddlMnu();
+        //i = 0, size = selectedMnu;
+        //for (i; i < size; i++) {
+        //    $("#MnuLst option[value='" + _lstMnuById[i][0] + "']").attr("selected", 1);
+        //    $("#MnuLst").multiselect("refresh");
+        //}
+
+        //Menu Dropdown
+        selectedMnu = _lstMnuById.length;
+        ddlMnu();
+        i = 0, size = selectedMnu;
+        for (i; i < size; i++) {
+            $("#MnuLst option[value='" + _lstMnuById[i] + "']").attr("selected", 1);
+        }
+        $("#MnuLst").multiselect("refresh");
+
+        //IsAdmin Checked
+        if (_isAdmin == "True") {
+
+            $("input:checkbox").prop("checked", false);
+            $("input:checkbox").prop("disabled", true);
+            $("#CBisAdmin").prop("disabled", false);
+            //$("#CBisActive").prop("disabled", false);
+            $("#CBisAdmin").prop("checked", true);
+            //$("#CBisActive").prop("checked", true);
+            $('#ProgramLst').val('');
+            $('#MnuLst').val('');
+        }
+        //IsCustomer Checked
+        if (_isCustomer == "True") {
+
+            //$("input:checkbox").prop("checked", false);
+            //$("input:checkbox").prop("disabled", true);
+           // $("#CBisCustomer").prop("disabled", false);
+            $("#CBisCustomer").prop("checked", true);
+            //$('#ProgramLst').val('');
+            //$('#MnuLst').val('');
+        }
+        if (_isActive == true) {
+            $("#CBisActive").prop("disabled", false);
+            $("#CBisActive").prop("checked", true);
+
+        }
+    }
+
+
+    $("#btnUser").click(function () {
+        $('#lblMsg').empty();
+
+        var _program = '';
+        var _programName = '';
+        var _mnu = '';
+        var _userId = '@Request.QueryString["ID"]';
+        var _isAdmin = '';
+        var _isActiveUser = 0;
+        var _isCustomer = '';
+        var _primaryUse = '';
+        //var _isActive=@Html.Raw(Json.Encode(Model.isActiveUser));
+        // Get selected Program List
+        $('#ProgramLst :selected').each(function (i, sel) {
+            if (i == 0) {
+                _program = "" + ($(sel).val()) + "";
+            }
+            else {
+                _program += "," + "" + ($(sel).val()) + "";
+            }
+        });
+
+
+        //Get Program Selected Text
+        $('#ProgramLst :selected').each(function (i, sel) {
+            if (i == 0) {
+                _programName = "" + ($(sel).text()) + "";
+            }
+            else {
+                _programName += "," + "" + ($(sel).text()) + "";
+            }
+        });
+
+        // Is Admin Checkbox
+        _isAdmin = $("#CBisAdmin").is(":checked");
+        // Is Active Customer Checkbox
+        _isActiveUser = $("#CBisActive").is(":checked");
+        // Is Customer Checkbox
+        _isCustomer = $("#CBisCustomer").is(":checked");
+
+        // Get primary use value
+        //check if user Active has been changed, only then update else let it remain same
+        //if (_isActive == 0 && _isActiveUser == true) {
+
+        //        _isActiveUser = 1;
+
+        //}
+        //if (_isActive == 1 && _isActiveUser == false) {
+
+        //    _isActiveUser = 1;
+
+        //}
+
+        _primaryUse = $('#primaryUse').val();
+        //Get Selected Menu List
+        $('#MnuLst :selected').each(function (i, sel) {
+            if (i == 0) {
+                _mnu = "" + ($(sel).val()) + "";
+            }
+            else {
+                _mnu += "," + "" + ($(sel).val()) + "";
+            }
+        });
+
+        if (_isAdmin==false && _program == '') {
+
+
+            if (_program == '') {
+                $('#lblMsg').append('Please, select at least one program');
+                changeColor('lblMsg', 'red');
+                return false;
+            }
+
+        }
+
+        if (_isAdmin == false &&  _mnu == '') {
+
+
+
+            if (_mnu == '') {
+                $('#lblMsg').append('Please, select at least one menu item');
+                changeColor('lblMsg', 'red');
+                return false;
+            }
+        }
+
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/UserRoleX/InsertAxs',
+            data:
+            {
+                userId: _userId,
+                program: _program,
+                programName: _programName,
+                isAdmin: _isAdmin,
+                isCustomer: _isCustomer,
+                mnu: _mnu,
+                primaryUse: _primaryUse,
+                isActiveUserchange:_isActiveUser
+            },
+
+            datatype: JSON,
+            success: function (data) {
+              
+                if (data.lblMsg == 'N') {
+                    $('#lblMsg').append('There are no changes to save');
+                    changeColor('lblMsg', 'green');
+
+                }
+                else {
+                    //loadUserData(_userId);
+                    $('#lblMsg').append('Record has been saved');
+                    changeColor('lblMsg', 'green');
+                    //OpenPage('/USerRoleX/Index');
+                }
+                if (data.ErrorMessageUpdate !=null){
+                    $("#CBisActive").prop("checked", false);
+            }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+
+        });
+        //loadUserData(_userId);
+
+    });
+    //This method is not called from anywhere. 
+    function loadUserData(id) {
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/UserRoleX/Detail',
+            data:
+            {
+                ID: id
+            },
+
+            datatype: JSON,
+            success: function (data)
+            {
+               
+
+                    var _lstProgram = @Html.Raw(Json.Encode(Model.FinallstProgram));
+                    var _lstProgramById = @Html.Raw(Json.Encode(Model.lstProgramById));
+                    var _lstMnu = @Html.Raw(Json.Encode(Model.FinallstMnu));
+                    var _lstMnuById = @Html.Raw(Json.Encode(Model.lstMnuById));
+                    var _isAdmin = @Html.Raw(Json.Encode(Model.isAdmin));
+                    var _isCustomer = @Html.Raw(Json.Encode(Model.isCustomer));
+                    var _isActive=@Html.Raw(Json.Encode(Model.isActiveUser));
+               // var _lstProgram = data.FinallstProgram;
+               // var _lstProgramById = data.lstProgramById;
+               //var _lstMnu = data.FinallstMnu;
+               // var _lstMnuById = data.lstMnuById;
+               // var _isAdmin = data.isAdmin;
+               // var _isCustomer = data.isCustomer;
+               // var _isActive = data.isActiveUser;
+
+                //Dropdown Program
+                selectedProgram =_lstProgramById.length;
+                ddlProgram();
+                i = 0, size = selectedProgram;
+                for (i; i < size; i++) {
+                    $("#ProgramLst option[value='" + _lstProgramById[i][0] + "']").attr("selected", 1);
+                    $("#ProgramLst").multiselect("refresh");
+
+                }
+                //IsAdmin Checked
+                if (_isAdmin == "True") {
+
+
+
+
+                    $("input:checkbox").prop('checked', $(this).prop("checked"));
+                    $('#CBisAdmin').prop('checked', true);
+                    $(":checkbox").attr("checked", true);
+
+                }
+                else {
+                    $("input:checkbox").prop('checked', $(this).prop("checked"));
+                    $('#CBisAdmin').prop('checked', false);
+                    $(":checkbox").attr("checked", false);
+
+                }
+                if (_isActive == true) {
+                    $("#CBisActive").prop("disabled", false);
+                    $("#CBisActive").prop("checked", true);
+
+                }
+                //Is Customer Checked
+                if (_isCustomer == "True") {
+
+
+
+
+                    $("input:checkbox").prop('checked', $(this).prop("checked"));
+                    $('#CBisCustomer').prop('checked', true);
+                    $(":checkbox").attr("checked", true);
+
+                }
+                else {
+                    $("input:checkbox").prop('checked', $(this).prop("checked"));
+                    $('#CBisCustomer').prop('checked', false);
+                    $(":checkbox").attr("checked", false);
+
+                }
+
+                //Menu Dropdown
+                selectedMnu = _lstMnuById.length;
+                ddlMnu();
+                i = 0, size = selectedMnu;
+                for (i; i < size; i++) {
+                    $("#MnuLst option[value='" + _lstMnuById[i][0] + "']").attr("selected", 1);
+                    $("#MnuLst").multiselect("refresh");
+                }
+
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+
+        });
+    }
+
+
+
+    function ddlProgram() {
+
+        $('#ProgramLst').multiselect({
+            includeSelectAllOption: true,
+            selectAllText: 'All',
+            buttonWidth: '100%',
+            maxHeight:500,
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 4,
+            templates: {
+                ul: '<ul class="multiselect-container " style="-ms-overflow-x: hidden; -ms-overflow-y: auto; max-height: 150px; width:100%; background-color:whitesmoke;">"'
+            },
+            buttonText: function (options, select) {
+                if (options.length == 0) {
+                    return 'select from list';
+                }
+                else {
+                    //selectedProgram = '';
+                    //options.each(function () {
+                    //    var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+                    //    selectedProgram += "'" + label + "', ";
+                    //});
+                    //selectedProgram = selectedProgram.substr(0, selectedProgram.length - 2);
+
+                    if (options.length > this.numberDisplayed) {
+                        return options.length + ' ' + this.nSelectedText;
+                    }
+                    else {
+                        var selected = '';
+                        options.each(function () {
+                            var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+                            selected += label + ", ";
+                        });
+                        return selected.substr(0, selected.length - 2);
+                    }
+                }
+            }
+        });
+       // $('#ProgramLst').multiselect('selectAll', true);
+        $("#ProgramLst").multiselect('updateButtonText');
+    }
+    function ddlMnu() {
+        $('#MnuLst').multiselect({
+            includeSelectAllOption: true,
+            selectAllText: 'All',
+            buttonWidth: '100%',
+            maxHeight: 500,
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 4,
+            templates: {
+                ul: '<ul class="multiselect-container " style="-ms-overflow-x: hidden; -ms-overflow-y: auto; max-height: 150px; width:100%; background-color:whitesmoke;">"'
+            },
+            buttonText: function (options, select) {
+                if (options.length == 0) {
+                    return 'select from list';
+                }
+                else {
+                    //selectedMnu = '';
+                    //options.each(function () {
+                    //    var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+                    //    selectedMnu += "'" + label + "', ";
+                    //});
+                    //selectedMnu = selectedMnu.substr(0, selectedMnu.length - 2);
+
+                    if (options.length > this.numberDisplayed) {
+                        return options.length + ' ' + this.nSelectedText;
+                    }
+                    else {
+                        var selected = '';
+                        options.each(function () {
+                            var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+                            selected += label + ", ";
+                        });
+                        return selected.substr(0, selected.length - 2);
+                    }
+                }
+            }
+        });
+     //   $('#MnuLst').multiselect('selectAll', true);
+        $("#MnuLst").multiselect('updateButtonText');
+    }
+    $("#ProgramLst").change(function () {
+        $('#lblMsg').empty();
+    });
+    $("#CBisAdmin").change(function () {
+        $('#lblMsg').empty();
+    });
+
+
+    $("#MnuLst").change(function () {
+        $('#lblMsg').empty();
+    });
+
+    function changeColor(id, newColor) {
+        $("#" + id).css("color", newColor);
+    }
+</script>
+    <script>
+        //function EnableDisabledCheckbox() {
+        //    var _isAdmin = $("#CBisAdmin").is(":checked");
+        //    if (_isAdmin == true) {
+
+        //        alert("a");
+        //        $("input:checkbox").prop("checked", false);
+        //        $("input:checkbox").prop("disabled", true);
+        //        $("#CBisAdmin").prop("disabled", false);
+        //        $("#CBisAdmin").prop("checked", true);
+
+        //    }
+        //}
+
+        $(document).ready(function () {
+
+            // EnableDisabledCheckbox();
+
+            $("#CBisAdmin").change(function () {
+                $('#ProgramLst').val('');
+                $('#MnuLst').val('');
+                var _isAdmin = $("#CBisAdmin").is(":checked");
+                var _isActive = $("#CBisActive").is(":checked");
+                if (_isAdmin == true) {
+
+                    $("input:checkbox").prop("checked", false);
+                    $("input:checkbox").prop("disabled", true);
+                    $("#CBisAdmin").prop("disabled", false);
+                    $("#CBisAdmin").prop("checked", true);
+                    
+
+                }
+                else {
+                    $("input:checkbox").prop("disabled", false);
+                    $("input:checkbox").prop("checked", false);
+                    $('#ProgramLst').val('');
+                    $('#MnuLst').val('');
+                }
+                if (_isActive) {
+                    $("#CBisActive").prop("disabled", false);
+                    $("#CBisActive").prop("checked", true);
+                }
+
+
+            });
+
+
+
+
+
+
+
+
+
+        });
+    </script>

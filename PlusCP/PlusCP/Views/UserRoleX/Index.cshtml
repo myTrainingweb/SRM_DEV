@@ -1,0 +1,699 @@
+﻿@model PlusCP.Models.UserRoleX
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+
+}
+<style>
+    .dropdown-list {
+        width: 140px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    /* .margin {
+                        margin: 4px;
+                        padding-top: 5px;
+                        color: white;
+                    }*/
+
+    /* .dropdown {
+            background-color: #29373D;
+            color: white;
+        }*/
+    .btn-success {
+        width: 115px;
+        height: 25px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    #lbl {
+        font-family: 'Helvetica Neue', Helvetica;
+    }
+
+    .Msg {
+        color: red;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    [data-tip] {
+        position: relative;
+    }
+
+        [data-tip]:before {
+            content: '';
+            /* hides the tooltip when not hovered */
+            display: none;
+            content: '';
+            display: none;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid #1a1a1a;
+            position: absolute;
+            top: 30px;
+            left: 35px;
+            z-index: 8;
+            font-size: 0;
+            line-height: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 30px;
+            left: 35px;
+            z-index: 8;
+            font-size: 0;
+            line-height: 0;
+            width: 0;
+            height: 0;
+        }
+
+        [data-tip]:after {
+            display: none;
+            content: attr(data-tip);
+            position: absolute;
+            top: 35px;
+            left: 0px;
+            padding: 0px 0px;
+            background-color: white;
+            color: black;
+            z-index: 9;
+            font-size: 10px;
+            height: 18px;
+            line-height: 18px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 1px;
+            border: 2px;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+
+        [data-tip]:hover:before,
+        [data-tip]:hover:after {
+            display: block;
+        }
+
+    .optionMsgGreen {
+        color: darkgreen !important;
+    }
+</style>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="~/Scripts/bootstrap-dropdown.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>*@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div id="dataList" class="box panel panel-default">
+                <div class="box-header with-border bg-blue-gradient">
+                    <span class="fa fa-list fa-lg white"></span>
+                    <h6 class="box-title"><strong>Users</strong></h6>
+
+                    <p id="button" class="btn btn-success btn-sm">Add New User <span class="fas fa-plus"></span></p>
+                    <span>&ensp;Status:</span>
+                    <select style="background-color: #0089db;" id="isActiveEmp">
+                        <option value="-1" style="text-align:left;">All</option>
+                        <option value="1" style="text-align:left;">Active</option>
+                        <option value="0" style="text-align:left;">Inactive</option>
+                    </select>
+
+                    <div id="buttons" class="box-tools pull-right">
+
+                    </div>
+
+                </div>
+                <div class="box-body">
+                    <table id="lstData" class="table table-bordered table-striped text-sm table-hover" @*style="width:100%"*@>
+                        <thead class="sorted-asc">
+                            <tr>
+                                <th class="notexport"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6" id="rghtPanel">
+            <h4 style="padding-top:300px; padding-left:180px;">Click on the edit button in the left section to load data.</h4>
+        </div>
+    </div>
+</div>
+@*@using (Html.BeginForm("newUser", "UserRoleX"))
+    {
+
+    }*@
+
+
+<div class="modal" id="user">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 430px; height:370px;">
+            <div class="modal-header" style="background-color:#0073b7; color:white;">
+                <h5 class="modal-title" style="margin-left:170px;"><strong>Add New User</strong></h5>
+                <button type="button" class="close full-opacity-hover" data-dismiss="modal" style="margin-top:-25px; color:white;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding:1px">
+                <table style="margin-left: 0px; ">
+                    <tr>
+                        <td class="pad">
+                            <label id="lbl">First Name:</label>
+                        </td>
+                        <td class="pad">
+                            <input type="text" class="form-control" id="FirstName" placeholder="First Name" style="width: 290px;" onkeydown="GoOnEnter()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pad">
+                            <label id="lbl">Last Name:</label>
+                        </td>
+                        <td class="pad">
+                            <input type="text" class="form-control" id="LastName" placeholder="Last Name" style="width: 290px;" onkeydown="GoOnEnter()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pad">
+                            <label id="lbl">Username:</label>
+                        </td>
+                        <td class="pad">
+                            <div data-tip="Username should be unique.">
+                                <input type="text" class="form-control" id="Username" placeholder="Username" style=" width: 290px;" onkeydown="GoOnEnter()" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pad">
+                            <label id="lbl">Email:</label>
+                        </td>
+                        <td class="pad">
+                            <div data-tip="Email should be unique.">
+                                <input type="text" class="form-control" id="Email" placeholder="Email" style="width: 290px;" onkeydown="GoOnEnter()" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pad">
+                            <label id="lbl">Password:</label>
+                        </td>
+                        <td class="pad">
+                            <div data-tip="Enter 1 Upper case, Lower case, Number, Special character.">
+                                <input type="password" class="form-control" id="Password" placeholder="Password" style="width: 290px;" onkeydown="GoOnEnter()" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="pad">
+                            <button type="submit" class="button" id="btnGo" style="background-color: #53bd5c; color: white; margin-left:70px;text-align:right;">Save</button>
+                            <a id="btnCancel" data-dismiss="modal" class="cancel" style="text-align:right;">Cancel</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="Msg">
+                            <label id="Msg" class="Msg" />
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br />
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    ToggleDataList(false);
+    LoadData('','');
+
+
+    var selectedProgram = '';
+    var selectedMnu = '';
+
+    var site;
+    function LoadData(IscreateUser,type) {
+        $('#tblBody').empty();
+
+        if (type == "") {
+            localStorage.removeItem("type");
+            $('#isActiveEmp option:contains("Class")').prop('selected', true);
+        }
+        else {
+            var type = localStorage.getItem("type");
+            if (type == "Y") {
+
+                $('#class option:contains("Y")').prop('selected', true);
+            }
+            if (type == "N") {
+
+                $('#class option:contains("N")').prop('selected', true);
+            }
+
+            if (typeof (type) === "-1") {
+
+                $('#isActiveEmp option:contains("Class")').prop('selected', true);
+            }
+        }
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: '/UserRoleX/GetList',
+            data: {
+                IscreateUser: IscreateUser,
+                type: type
+            },
+            datatype: JSON,
+            success: function (data) {
+                var columnDef = [
+                    {
+                        "data": "Edit", "title": "Edit", "className": "text-center", "className": "notexport",
+                        render: function (data, type, row) {
+                            var url = '<a href="#" onclick="OpenView(\'\\\\UserRoleX\\\\Detail?ID=' + row["ID"] + '&FirstName=' + row["FirstName"] + '&LastName=' + row["LastName"] + '\',\'rghtPanel\')">' + data + '<i class="fa fa-pencil-square" aria-hidden="true" style="font-size:20px"></i></a>';
+                            return url;
+                        },
+                    },
+                    {
+                        "data": "ID", "title": "Id", "width": "30px"
+                    },
+                    {
+                        "data": "FirstName", "title": "First Name", "width": "70px"
+                    },
+                    {
+                        "data": "LastName", "title": "Last Name", "width": "70px"
+                    },
+                    {
+                        "data": "USERNAME", "title": "User Name"
+
+                    },
+
+                    {
+                        "data": "EMAIL", "title": "Email", "width": "100px"
+                    },
+                    {
+                        "data": "ACTIVE", "title": "Active", "width": "50px", "className": "text-center"
+                    },
+                    {
+                        "data": "IsCustomer", "title": "Is Customer", "width": "70px", "className": "text-center"
+                    },
+                    {
+                        "data": "PrimaryUse", "title": "Primary Use", "width": "70px", "className": "text-center"
+                    },
+
+                    {
+                        "data": "PlusLastLogOn", "title": "Last Accessed On", "width": "110px", "className": "text-right"
+                    },
+                    {
+
+                        "data": "CreatedBy", "title": "Created By", "width": "100px"
+                    },
+                    {
+                        "data": "CreatedOn", "title": "Created On", "width": "90px", "className": "text-right"
+                    },
+                ]
+
+                ToggleDataList(true);
+                MakeDataGrid('lstData', data.lstUser, 0, columnDef, true, false, false, false);
+                $('.dropdown-toggle').dropdown();
+                //  Loadddl();
+                if (data["ErrorMessage"] != null) {
+                    $('.dataTables_empty > p').text(data["ErrorMessage"]);
+                }
+            },
+            onerror: function (r) { r },
+            failure: function (r) { r }
+        });
+    }
+
+    $("#isActiveEmp").change(function () {
+        var type = $("#isActiveEmp").val();
+        localStorage.setItem("type", type);
+        LoadData('',localStorage.getItem("type"));
+    });
+    $('#btnCancel').click(function () {
+        $(Username).val('');
+        $(Password).val('');
+        $(FirstName).val('');
+        $(LastName).val('');
+        $(Email).val('');
+        $('#Msg').empty();
+    });
+
+    $('.btn-success').click(function () {
+        $('#user').modal('show');
+    });
+
+    $('.btn-success').click(function () {
+        $('#FirstName').focus();
+    });
+
+
+    $("#FirstName").keydown(function (event) {
+        if (event.keyCode === 13) {
+            $("#btnGo").click();
+        }
+    });
+
+    $("#LastName").keydown(function (event) {
+        if (event.keyCode === 13) {
+            $("#btnGo").click();
+        }
+    });
+
+    $("#Username").keydown(function (event) {
+        if (event.keyCode === 13) {
+            $("#btnGo").click();
+        }
+    });
+
+    $("#Email").keydown(function (event) {
+        if (event.keyCode === 13) {
+            $("#btnGo").click();
+        }
+    });
+
+    $("#Password").keydown(function (event) {
+        if (event.keyCode === 13) {
+            $("#btnGo").click();
+        }
+    });
+
+    $("#btnGo").click(function () {
+        var _FirstName = $('#FirstName').val();
+        var _LastName = $('#LastName').val();
+        var _Username = $('#Username').val();
+        var _Email = $('#Email').val();
+        var _Password = $('#Password').val();
+
+        if (_FirstName.length == 0) {
+            $('#Msg').empty();
+            $('#Msg').append('Enter First Name.');
+            return false;
+        }
+
+        if (_LastName.length == 0) {
+            $('#Msg').empty();
+            $('#Msg').append('Enter Last Name.');
+            return false;
+        }
+
+        if (_Username.length == 0) {
+            $('#Msg').empty();
+            $('#Msg').append('Enter Username.');
+            return false;
+        }
+
+        if (_Email.length == 0) {
+            $('#Msg').empty();
+            $('#Msg').append('Enter Email.');
+            return false;
+        }
+
+        else {
+            $('#Msg').empty();
+            var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (!_Email.match(validRegex)) {
+                $('#Msg').append('Enter Valid email address!');
+                $('#Email').focus();
+                return false;
+            }
+        }
+
+        if (_Password.length == 0) {
+            $('#Msg').empty();
+            $('#Msg').append('Enter Password.');
+            return false;
+        }
+
+
+
+        $.ajax({
+            cache: false,
+            type: 'GET',
+            url: '/UserRoleX/InsertUser',
+            data: {
+                Username: _Username,
+                Password: _Password,
+                FirstName: _FirstName,
+                LastName: _LastName,
+                Email: _Email
+            },
+
+            contentType: "application/json;charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                if (data.Message == 'User has not been Created.') {
+                    $('#Msg').empty();
+                    $('#Msg').append('Username or Email already exist.');
+                }
+                else {
+                    $(Username).val('');
+                    $(Password).val('');
+                    $(FirstName).val('');
+                    $(LastName).val('');
+                    $(Email).val('');
+                    $('#Msg').empty();
+                    LoadData('Y','');
+                    $('#user').modal('hide');
+                }
+
+
+            },
+            error: function (Message) {
+                alert(Message.responseText);
+            }
+        });
+
+    });
+
+    function MakeDataGrid(tableId, data, tableHeight, columns, search, isScrollX, footerFunction, detailed, reportTitleId, rowSelection, lstHeight) {
+        var isFooter = footerFunction === undefined || footerFunction === false ? false : true;
+        var isDetailed = detailed === undefined ? false : true;
+        var reportTitle = '';
+
+        if (reportTitleId === undefined)
+            reportTitle = $('.box-title').text();
+        else
+            reportTitle = reportTitleId;
+
+        var gridHeight = 0;
+
+        isScrollX = isScrollX === undefined ? false : true;
+        if (search === undefined) { search = true; }
+
+        var gridButtonsClass = '';
+        var gridSearchBoxClass = '';
+        if (isDetailed === true) {
+            gridButtonsClass = 'btn-header btn-box-tool';
+            gridSearchBoxClass = 'bg-white  txtSearch';
+            gridButtonSize = 20;
+        }
+        else {
+            gridButtonsClass = 'btn-header btn-box-tool';
+            gridSearchBoxClass = 'btn-box-tool bg-white txtSearch';
+            gridButtonSize = 20;
+        }
+
+        //For SQL Documentation
+
+        var rptDtlCode, rptDtlTitle, qrytool;
+        //if (isDetailed === true) {
+        //    rptDtlCode = $('#rptcode').val();
+        //    rptDtlTitle = reportTitle.substring(0, reportTitle.indexOf('>'));
+
+        //    if (rptDtlTitle === "")
+        //        rptDtlTitle = reportTitle;
+
+        //    qrytool = '<a id="showQuery" class="btn-header btn-box-tool" href="\\SqlDocs\\Index?rptCode=' + rptDtlCode + '&rptTitle=' + rptDtlTitle + '&isDetail=Y' + '" title="How they do that" target="_blank">';
+        //    qrytool += '<span class="fa-stack sqlDoc" ><i class="fa fa-circle fa-stack-2x" style="color: rgb(221, 75, 57);"></i><i class="fa fa-database fa-stack-1x" style="color: white;"></i></span>';
+        //    qrytool += '</a>';
+
+        //    $('#buttons').empty();
+        //    $('#buttons').append(qrytool);
+        //}
+        //else {
+        //    var rptCode = $('#rptCode').val(); // for sql docs.
+        //    var rptTitle = $('#rptTitle').val(); // for sql docs.
+        //    if (rptCode === undefined) {
+        //        rptDtlCode = $('#rptcode').val();
+        //        rptDtlTitle = reportTitle.substring(0, reportTitle.indexOf('>'));
+
+        //        qrytool = '<a id="showQuery"  class="btn-header btn-box-tool" href="\\SqlDocs\\Index?rptCode=' + rptDtlCode + '&rptTitle=' + rptDtlTitle  + '&isDetail=N' + '" title="How they do that" target="_blank">';
+        //        qrytool += '<span class="fa-stack sqlDoc" ><i class="fa fa-circle fa-stack-2x" style="color: rgb(221, 75, 57);"></i><i class="fa fa-database fa-stack-1x" style="color: white;"></i></span>';
+        //        qrytool += '</a>';
+
+        //        $('#buttons').empty();
+        //        $('#buttons').append(qrytool);
+        //    }
+        //    else {
+        //        qrytool = '<a id="showQuery"  class="btn-header btn-box-tool" href="\\SqlDocs\\Index?rptCode=' + rptCode + '&rptTitle=' + rptTitle + '&isDetail=N' + '" title="How they do that" target="_blank">';
+        //        qrytool += '<span class="fa-stack sqlDoc"><i class="fa fa-circle fa-stack-2x" style="color: rgb(221, 75, 57);"></i><i class="fa fa-database fa-stack-1x" style="color: white;"></i></span>';
+        //        qrytool += '</a>';
+
+        //        $('#buttons').empty();
+        //        $('#buttons').append(qrytool);
+        //    }
+        //}
+
+        if (search === true) {
+            var boxtool = '<input class="' + gridSearchBoxClass + '" id="txtSearch" type="text" placeholder="Search.." style="padding-left: 10px !important;" >';
+            $('#buttons').empty();
+            $('#buttons').append(boxtool);
+        }
+
+        var table = $('#' + tableId).DataTable({
+            order: [],
+            createdRow: rowSelection,         // add Parameter for row selection in PO Detail // Added By Tahir
+            data: data,
+            columns: columns,
+            paging: true,
+            ordering: true,
+            searching: search,
+            select: {
+                style: 'single'
+            },
+            deferRender: true,
+            destroy: true,
+            pagingType: 'full',
+            pageLength: 100,
+            scrollCollapse: false,
+            scrollX: isScrollX,
+            //scrollY: gridHeight,
+
+            footerCallback: footerFunction,
+            language: {
+                emptyTable: "<p style=\"text-align:left;\">No record(s) found.</p>",
+                zeroRecords: "<p style=\"text-align:left;\">No matching record(s) found</p>",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                oPaginate: {
+                    sNext: '<i class="fa fa-forward"></i>',
+                    sPrevious: '<i class="fa fa-backward"></i>',
+                    sFirst: '<i class="fa fa-step-backward"></i>',
+                    sLast: '<i class="fa fa-step-forward"></i>'
+                }
+            },
+            "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-3'i><'#designedBy.col-sm-7'><'col-sm-2'p>>",
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    footer: true,
+                    text: '<span><span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: rgb(244, 164, 37);"></i><i class="fa fa-copy fa-stack-1x" style="color: white;"></i></span></span>',
+                    titleAttr: 'Copy',
+                    title: reportTitle,
+                    filename: 'DataExport',
+                    exportOptions: {
+                        //columns: ':visible'
+                        columns: 'th:not(.notexport)' // Excluding columns while exporting
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    footer: true,
+                    text: '<span><span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: rgb(0, 179, 98);"></i><i class="fa fa-file-excel fa-stack-1x" style="color: white;"></i></span></span>',
+                    titleAttr: 'Export to excel',
+                    title: reportTitle,
+                    filename: 'DataExport', //Added By Tahir
+                    exportOptions: {
+                        //columns: ':visible'
+                        columns: 'th:not(.notexport)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    footer: true,
+                    text: '<span><span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: rgb(0, 204, 255);"></i><i class="fa fa-print fa-stack-1x" style="color: white;"></i></span></span>',
+                    titleAttr: 'Print',
+                    title: '',
+                    messageTop: function () { return '<h4>' + reportTitle + '</h4>'; },
+                    filename: 'DataExport',
+                    exportOptions: {
+                        // columns: ':visible'
+                        columns: 'th:not(.notexport)'
+                    }
+                }
+            ],
+            select: true
+        });
+        table.buttons().container()
+            .appendTo('#buttons');
+
+        table.button(0).nodes().removeClass('btn btn-default buttons-copy buttons-html5');
+        table.button(0).nodes().addClass(gridButtonsClass);
+
+        table.button(1).nodes().removeClass('btn btn-default buttons-excel buttons-html5');
+        table.button(1).nodes().addClass(gridButtonsClass);
+
+        table.button(2).nodes().removeClass('btn btn-default buttons-excel buttons-html5');
+        table.button(2).nodes().addClass(gridButtonsClass);
+
+        var dsgndby = $('.modal-footer > #designedby ').html();
+
+        if (dsgndby === "") {
+            $('#designedBy').html($('.desgndBy').html());
+        }
+
+        var layoutHeader = $('nav').innerHeight();
+        var cardHeader = $('.box-header').innerHeight();
+        var tableHeader = $('.dataTables_scrollHead').innerHeight();
+        var tableFooter = 0;
+        var cardFooterH = 30;
+
+        if (isFooter === true)
+            tableFooter = $('.dataTables_scrollFoot').innerHeight();
+
+
+        var parentHeight = $('#' + lstHeight).innerHeight();
+        if (parentHeight == undefined)
+            parentHeight = window.innerHeight;
+        else
+            parentHeight = $('#' + lstHeight).innerHeight();
+
+        if (isFooter === true)
+            tableFooter = $('#' + tableId + ' > tfoot').innerHeight();
+
+        var browserHeight = parentHeight;
+        if (tableHeight === 0) {
+            if (layoutHeader === undefined)
+                gridHeight = browserHeight - (cardHeader + tableHeader + tableFooter + cardFooterH);
+            else
+                gridHeight = browserHeight - (layoutHeader + cardHeader + tableHeader + tableFooter + cardFooterH);
+        }
+        else { gridHeight = tableHeight; }
+
+        var topHeader = $('#topHeader').innerHeight();
+        if (topHeader > 0)
+            gridHeight = gridHeight - (topHeader + 1);
+
+        $('.dataTables_scrollBody').css('height', gridHeight + 'px');
+        table.columns.adjust().draw();
+
+        $('.dataTables_filter').hide();
+        $('#txtSearch').on('keyup change', function () {
+            table.search(this.value).draw();
+        });
+
+        return table;
+    }
+</script>

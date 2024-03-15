@@ -1,0 +1,1091 @@
+﻿@model PlusCP.Models.PartInquiry
+@{
+    ViewBag.Title = "Detail";
+    Layout = cCommon.SwitchToDetailPage(Request.Url.PathAndQuery);
+    string isAdmin = Session["isAdmin"] as string;
+}
+<style>
+    .text-sm {
+        padding-bottom: 2px;
+    } 
+
+    .babygridheight {
+        width: 100%;
+    }
+
+    .more-text {
+        display: none;
+    }
+</style>
+<div id="parentDiv" class="container-fluid">
+    <input id="rptcode" type="hidden" value="002" />
+    <div id="datalist" class="box panel panel-default">
+        <div class="box-header with-border bg-blue-gradient">
+            @{
+                // if (Layout == "~/Views/Shared/_LayoutInner.cshtml")
+                if (Layout == null)
+                {
+                    <button type="button" class="btn btn-box-tool" title="Option Page" onclick="$('#option').modal('show');">
+                        <span class="fa fa-filter fa-lg white"></span>
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-box-tool">
+                        <span class="fa fa-th-list fa-lg white"></span>
+                    </button>
+                }
+            }
+            <h6 class="box-title"><strong>Parts Inquiry Detail >  Part No. = @ViewBag.PartNo</strong></h6>
+            <div id="button" class="box-tools pull-right" style="margin-top:2PX;">
+            </div>
+        </div> 
+        <div id="topHeader" class="box-body row text-sm">
+            <div class="col-md-12 text-sm">
+                <table id="tblheader" class="table text-sm" style="margin-bottom:-5px; width:100%">
+                    <tr>
+                        <td style="width: 130px;"><strong>@Html.DisplayNameFor(m => m.description)</strong></td>
+                        <td class="show-read-more" style="background-color: #f4f4f4;">@Html.DisplayFor(m => m.description)</td>
+
+                        <td style="width: 70px;"><strong>@Html.DisplayNameFor(m => m.modelNo)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.modelNo)</td>
+
+                        <td style="width: 130px;"><strong>@Html.DisplayNameFor(m => m.primaryCommodity)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.primaryCommodity)</td>
+
+                        <td style="width: 70px;"><strong>@Html.DisplayNameFor(m => m.status)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.status)</td>
+
+                        <td style="width: 100px;"><strong>@Html.DisplayNameFor(m => m.userName)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.userName)</td>
+
+
+                        <td style="width: 100px;"><strong>@Html.DisplayNameFor(m => m.createdOn)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.createdOn)</td>
+
+                    </tr>
+                    <tr>
+                        <td><strong>@Html.DisplayNameFor(m => m.manufacturePartNo)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.manufacturePartNo)</td>
+
+                        <td><strong>@Html.DisplayNameFor(m => m.serialFlag)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.serialFlag)</td>
+
+                        <td><strong>@Html.DisplayNameFor(m => m.secondaryCommodity)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.secondaryCommodity)</td>
+
+                        <td><strong>@Html.DisplayNameFor(m => m.partType)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.partType)</td>
+
+                        <td><strong></strong>-</td>
+                        <td class="bg-gray-light">-</td>
+
+                        <td><strong>@Html.DisplayNameFor(m => m.lastActivityOn)</strong></td>
+                        <td class="bg-gray-light">@Html.DisplayFor(m => m.lastActivityOn)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row box-body">
+    @*<div class="col-md-6 section-padding">
+            <div class="box babygridheight">
+                <div class="box-header bg-blue-gradient ">
+                    <h6 class="box-title" id="partAttr"><strong>Part No. Attribute > Part No. = '@Request.QueryString["partNo"]'</strong></h6>
+                    <div id="button_PA" class="box-tools pull-right">
+                    </div>
+                </div>
+                <div class="box-body text-sm" id="lstPA" style="height:41%">
+                    <table id="lstPartAttribute" class="table table-bordered table-striped text-sm table-hover fixed" width="100%">
+                        <thead>
+                            <tr>
+                                <th rowspan="2"></th>
+                                <th colspan="3" style="border-bottom-width:0px;">Out Of Box</th>
+                                <th colspan="3" style="border-bottom-width:0px;">New In Box</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="border-right-width:1px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>*@
+    <div class="row ">
+        <div class="col-md-4 section-padding ">
+            <div class="box babygridheight">
+                <div class="box-header bg-blue-gradient ">
+                    <h6 class="box-title " id="partQty"><strong> Part Qty > Part No. = @ViewBag.PartNo</strong></h6>
+                    <div id="button_PQ" class="box-tools pull-right">
+                    </div>
+                </div>
+                <div class="box-body text-sm" id="lstPQ" style="height:37%">
+                    <table id="lstPartQty" class="table table-bordered table-striped text-sm table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="notexport"></th>
+                                <th class="notexport"></th>
+                                <th></th>
+                                <th class="notexport"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th class="notexport"></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Total :</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 section-padding ">
+            <div class="box babygridheight">
+                <div class="box-header bg-blue-gradient ">
+                    <h6 class="box-title " id="OpenRO"><strong> New RO > Part No. = @ViewBag.PartNo'</strong></h6>
+                    <div id="button_RO" class="box-tools pull-right">
+                    </div>
+                </div>
+                <div class="box-body text-sm" id="lstRO" style="height:37%">
+                    <table id="lstOpenRO" class="table table-bordered table-striped text-sm table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="notexport"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Total :</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 section-padding ">
+            <div class="box babygridheight">
+                <div class="box-header bg-blue-gradient ">
+                    <h6 class="box-title " id="OpenSO"><strong> New SO > Part No. = @ViewBag.PartNo</strong></h6>
+                    <div id="button_SO" class="box-tools pull-right">
+                    </div>
+                </div>
+                <div class="box-body text-sm" id="lstSO" style="height:37%">
+                    <table id="lstOpenSO" class="table table-bordered table-striped text-sm table-hover"  width="100%">
+                        <thead>
+                            <tr>
+                                <th class="notexport"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Total :</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row ">
+    <div class="baby-col-12 section-padding">
+        <div class="box babygridheight">
+            <div class="box-header bg-blue-gradient ">
+                <h6 class="box-title " id="partTran"><strong>Part Transaction > Part No. = @ViewBag.PartNo |  For Last 90 Days</strong></h6>
+                <div id="button_PT" class="box-tools pull-right">
+                </div>
+            </div>
+            <div class="box-body text-sm" id="lstPT">
+                <table id="lstPartTransaction" class="table table-bordered table-striped text-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th class="notexport"></th>
+                            <th class="notexport"></th>
+                            <th></th>
+                            <th></th>
+                            <th class="notexport"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    @*<tfoot>
+                        <tr>
+                            <th></th>
+                            <th style="text-align:left;">Total :</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>*@
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+@{
+    if (Layout == null)
+    {
+
+    <script type="text/javascript">
+            @*var qrytool = '<a id="showQuery" class="btn-header btn-box-tool" href="\\SqlDocs\\Index?rptCode=002' + '&rptTitle=Parts Inquiry' + '&isDetail=Y' + '" title="How they do that" target="_blank">';
+            qrytool += '<span class="fa-stack sqlDoc" ><i class="fa fa-circle fa-stack-2x" style="color: rgb(221, 75, 57);"></i><i class="fa fa-database fa-stack-1x" style="color: white;"></i></span>';
+            qrytool += '</a>';
+            if ('@isAdmin' === "True") {
+                $('#button').empty();
+                $('#button').append(qrytool);
+            }*@
+
+              //show more function added by  mohsin
+    $(document).ready(function () {
+                    var maxLength = 15;
+                    $(".show-read-more").each(function () {
+                        var myStr = $(this).text();
+                        if ($.trim(myStr).length > maxLength) {
+                            var newStr = myStr.substring(0, maxLength);
+                            var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
+                            $(this).empty().html(newStr);
+                            $(this).append(' <a href="javascript:void(0);" class="read-more" title="@Html.DisplayFor(m => m.description)">Show more...</a>');
+                            $(this).append('<span class="more-text">' + removedStr + '</span>');
+                        }
+                    });
+
+    $(".read-more").click(function () {
+        $('#comments').modal('show');
+
+                    });
+                  });
+
+    $(document).ready(function () {
+        $('#commentsheader').append('<label>Description</label>')
+        $('#commentsbody').append('<p>@Html.DisplayFor(m => m.description)</p>')
+                });
+
+
+
+
+            $(document).ready(function () {
+                ToggleDataList(false);
+
+
+                    @*//var _lstPartAttribute = @Html.Raw(Json.Encode(Model.lstPartAttribute));*@
+                    var _lstPartQty = @Html.Raw(Json.Encode(Model.lstPartQty));
+                var _lstPartTransaction = @Html.Raw(Json.Encode(Model.lstPartTransaction));
+                var _lstOpenRO = @Html.Raw(Json.Encode(Model.lstOpenRO));
+                var _lstOpenSO = @Html.Raw(Json.Encode(Model.lstOpenSO));
+
+
+                    //var PartAttribute = [
+                    //    { "data": "Program", "title": "Program" },
+                    //    { "data": "OutOfBoxWidth", "title": "Width", "width": "50px" },
+                    //    { "data": "OutOfBoxHeight", "title": "Height", "width": "50px" },
+                    //    { "data": "OutOfBoxLength", "title": "Length", "width": "50px" },
+                    //    { "data": "NewInBoxWidth", "title": "Width", "width": "50px" },
+                    //    { "data": "NewInBoxHeight", "title": "Height", "width": "50px" },
+                    //    { "data": "NewInBoxLength", "title": "Length", "width": "50px" }
+                    //]
+
+                var PartQty = [
+
+                    { "data": "SerialFlag", "title": "SerialFlag", "width": "50px", "visible": false },
+                    { "data": "PartNo", "title": "PartNo", "width": "50px", "visible": false },
+                    { "data": "Program", "title": "Program", "width": "50px" },
+                    { "data": "LocationId", "visible": false },
+                    { "data": "LocationNo", "title": "Location", "width": "300px" },
+                    {
+                        "data": "PalletNo", "title": "Pallet No.", "width": "40px",
+                        render: function (data, type, row) {
+                            var data_replace = data;
+                            if (data_replace == '' || data_replace == null) {
+                                data_replace = 0;
+                            }
+                            return data_replace;
+                        }
+                    },
+                    { "data": "CartonNo", "title": "Lot No.", "width": "40px" },
+                    //{ "data": "LotNo", "title": "Lot No.", "width": "70px" },
+                    { "data": "ConfigId", "visible":false },
+                    { "data": "Configuration", "title": "Configuration", "width": "70px" },
+                    {
+                        "data": "AvailQty", "title": "Qty", "width": "40px", "className": "text-right",
+                        render: function (data, type, row) {
+
+                            if (row["SerialFlag"] == 'N') {
+                                html = row["AvailQty"];
+                            }
+                            else {
+
+                                if (row["PalletNo"] == '' || row["PalletNo"] == null) {
+                                    row["PalletNo"] = 0;
+                                }
+
+                                var formId = "soDetailForm_" + row["partno"] + "_" + row["LocationId"] + "_" + row["PalletNo"] + "_" + row["ConfigId"];
+                                var html = '<form id="' + formId + '" method="GET" action="\\SNHistory\\Index" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                    '<input type="hidden" name="locationId" value="' + row["LocationId"] + '">' +
+                                    '<input type="hidden" name="palletNo" value="' + row["PalletNo"] + '">' +
+                                    '<input type="hidden" name="config" value="' + row["ConfigId"] + '">' +
+                                    '<input type="hidden" name="originFrom" value="PartsQty">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                            }
+                            return html;
+                        }
+                    },
+                    //{ "data": "RsvdQty", "title": "Rsvd", "width": "50px", "className": "text-right" }
+                ]
+
+                    //For Displaying  Footer Sum
+                var footerpartQty = function () {
+                    var api = this.api();
+                    $(api.column(9).footer()).html(thousands_separators(api.column(9).data().sum()));
+                }
+
+                var PartTransaction = [
+                    { "data": "OrderHeaderID", "title": "OrderHeaderID", "width": "70px", "visible": false },
+                    { "data": "PartNo", "title": "Part No.", "width": "70px", "visible": false },
+                    { "data": "CreateDate", "title": "Trans. Date", "width": "90px", "className": "text-right" },
+                    { "data": "PartTransactionType", "title": "Trans. Type", "width": "100px" },
+                    { "data": "Program", "title": "Program", "width": "60px", "visible": false },
+                    {
+                        "data": "ParentSerialNo", "title": "Parent Serial No.", "width": "90px",
+                        render: function (data) {
+                            var d = data.toString();
+                            return d + "\u200C";
+                        }
+                    },
+
+                    {
+                        "data": "SerialNo", "title": "Serial No.", "width": "100px",
+                        render: function (data, type, row) {
+                            if (row["SerialNo"] == "*") {
+                                html = row["SerialNo"];
+                            }
+                            else {
+                                var formId = "partInquiryForm_" + row["SerialNo"] + "_" + row["PartNo"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\SNHistory\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="serialNo" value="' + row["SerialNo"] + '">' +
+                                    '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                            }
+                            return html;
+                        }
+                    },
+                    { "data": "Qty", "title": "Qty", "width": "30px", "className": "text-right" },
+                    { "data": "Source", "title": "Source", "width": "200px" },
+                    { "data": "Condition", "title": "Condition", "width": "50px" },
+                    { "data": "Configuration", "title": "Configuration", "width": "80px" },
+                    { "data": "Location", "title": "Location", "width": "400px" },
+                    { "data": "ToLocation", "title": "To Location", "width": "120px" },
+                    { "data": "Reason", "title": "Reason" },
+                    { "data": "PartType", "title": "Part Type", "width": "60px" },
+                    {
+                        "data": "CustomerReference", "title": "Customer Ref.", "width": "120px",
+                        render: function (data, type, row) {
+
+                            var html;
+                            var orderType = row["OrderType"];
+                            if (orderType == "") {
+                                var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="ID" value="' + row["OrderHeaderID"] + '">' +
+                                    '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                            }
+
+
+                            if (orderType == 'RO') {
+                                var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="ID" value="' + row["OrderHeaderID"] + '">' +
+                                    '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                            }
+
+                            else if (orderType == 'SO') {
+
+                                var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\SO\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="SOHeaderId" value="' + row["OrderHeaderID"] + '">' +
+                                    '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                            }
+
+                            else if (orderType == 'WO') {
+                                var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\WO\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="ID" value="' + row["OrderHeaderID"] + '">' +
+                                    '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                            }
+
+                            return html;
+                        }
+                    },
+                    { "data": "OrderType", "title": "Order Type", "width": "60px" },
+                    { "data": "Username", "title": "Created By", "width": "130px" }
+                ]
+
+
+                    //For Displaying  Footer Sum
+                //    var footerfunc = function () {
+                //        var api = this.api();
+                //        $(api.column(6).footer()).html(thousands_separators(api.column(6).data().sum()));
+                //}
+                // For Open RO
+                var OpenRO = [
+                    { "data": "ID", "title": "ID", "width": "50px", "visible": false},
+                    {
+                        "data": "CustomerReference", "title": "Customer Ref.", "width": "200px",
+                    render: function (data, type, row) {
+                        var formId = "partInquiryForm_" + row["ID"] + "_" + row["CustomerReference"];
+                        var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                            '<input type="hidden" name="Id" value="' + row["ID"] + '">' +
+                            '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                            '<input type="hidden" name="page" value="list">' +
+                            '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                            '</form>';
+                        return html;
+
+                    }
+                                },
+                    { "data": "QtyToReceive", "title": "Ordered", "width": "50px", "className": "text-right" },
+                    { "data": "QtyReceived", "title": "Rcvd", "width": "50px", "className": "text-right" },
+                    { "data": "Status", "title": "Status", "width": "70px" },
+                    { "data": "CreateDate", "title": "Created On", "width": "100px", "className": "text-right" },
+                    { "data": "LastActivityDate", "title": "Last Activity On", "width": "110px", "className": "text-right" }
+                ]
+
+
+                //For Displaying  Footer Sum
+                var footerOpenRO = function () {
+                    var api = this.api();
+                    $(api.column(2).footer()).html(thousands_separators(api.column(2).data().sum()));
+                    $(api.column(3).footer()).html(thousands_separators(api.column(3).data().sum()));
+                }
+
+                // For Open SO
+                var OpenSO = [
+                    { "data": "ID", "title": "ID", "width": "50px", "visible": false },
+                    {
+                        "data": "customerreference", "title": "Customer Reference", "width": "200px",
+                    render: function (data, type, row) {
+                        var formId = "partInquiryForm_" + row["ID"] + "_" + row["customerreference"];
+                        var html = '<form id="' + formId + '" method="POST" action="\\SO\\Detail" target="_blank" style="margin:1px;">' +
+                            '<input type="hidden" name="SOHeaderId" value="' + row["ID"] + '">' +
+                            '<input type="hidden" name="custRef" value="' + row["customerreference"] + '">' +
+                            '<input type="hidden" name="page" value="list">' +
+                            '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                            '</form>';
+                        return html;
+
+                    }
+                                },
+                    { "data": "qtytoship", "title": "To Ship ", "width": "50px", "className": "text-right" },
+                    { "data": "qtyreserved", "title": "Rsvd", "width": "50px", "className": "text-right" },
+                    { "data": "Status", "title": "Status", "width": "70px" },
+                    { "data": "createdate", "title": "Created On", "width": "100px", "className": "text-right" },
+                    { "data": "lastactivitydate", "title": "Last Activity On", "width": "110px", "className": "text-right" }
+                ]
+
+
+                //For Displaying  Footer Sum
+                var footerOpenSO = function () {
+                    var api = this.api();
+                    $(api.column(2).footer()).html(thousands_separators(api.column(2).data().sum()));
+                    $(api.column(3).footer()).html(thousands_separators(api.column(3).data().sum()));
+                }
+
+
+
+
+                    ToggleDataList(true);
+                    var h = getHeight(150);
+                    var i = getHeight(170);
+               // MakeMeBabyGrid('lstPartAttribute', _lstPartAttribute, 0, PartAttribute, 'button_PA', false, $('#partAttr').text(), false, 'lstPA');
+                MakeMeBabyGridIP('lstPartQty', _lstPartQty, 0, PartQty, 'button_PQ', false, $('#partQty').text(), footerpartQty, 'lstPQ');
+                //MakeDataGrid('lstPartTransaction', _lstPartTransaction, 190, PartTransaction, false, false, footerfunc, true, $('.box-title').text(), false, 'lstPT');
+                //MakeMeBabyGridIP('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, 'button_PT', false, $('#partTran').text(), footerfunc, 'lstPT');
+               // MakeDataGridIP('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, true, true);
+                MakeMeBabyGridIP('lstOpenRO', _lstOpenRO, 0, OpenRO, 'button_RO', false, $('#OpenRO').text(), footerOpenRO, 'lstRO');
+                MakeMeBabyGridIP('lstOpenSO', _lstOpenSO, 0, OpenSO, 'button_SO', false, $('#OpenSO').text(), footerOpenSO, 'lstSO');
+                MakeFrameGrid('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, false, true, true, false, false, false, false);
+    });
+    </script>
+
+    }
+    else
+    {
+        @section js{
+            <script type="text/javascript">
+                @*var qrytool = '<a id="showQuery" class="btn-header btn-box-tool" href="\\SqlDocs\\Index?rptCode=002' + '&rptTitle=Parts Inquiry' + '&isDetail=Y' + '" title="How they do that" target="_blank">';
+            qrytool += '<span class="fa-stack sqlDoc" ><i class="fa fa-circle fa-stack-2x" style="color: rgb(221, 75, 57);"></i><i class="fa fa-database fa-stack-1x" style="color: white;"></i></span>';
+            qrytool += '</a>';
+            if ('@isAdmin' === "True") {
+                $('#button').empty();
+                $('#button').append(qrytool);
+            }*@
+                //show more function added by  mohsin
+    $(document).ready(function () {
+                    var maxLength = 15;
+                    $(".show-read-more").each(function () {
+                        var myStr = $(this).text();
+                        if ($.trim(myStr).length > maxLength) {
+                            var newStr = myStr.substring(0, maxLength);
+                            var removedStr = myStr.substring(maxLength, $.trim(myStr).length);
+                            $(this).empty().html(newStr);
+                            $(this).append(' <a href="javascript:void(0);" class="read-more" title="@Html.DisplayFor(m => m.description)">Show more...</a>');
+                            $(this).append('<span class="more-text">' + removedStr + '</span>');
+                        }
+                    });
+
+    $(".read-more").click(function () {
+        $('#comments').modal('show');
+
+                    });
+                  });
+
+    $(document).ready(function () {
+        $('#commentsheader').append('<label>Description</label>')
+        $('#commentsbody').append('<p>@Html.DisplayFor(m => m.description)</p>')
+                });
+
+                @{
+System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+serializer.MaxJsonLength = Int32.MaxValue;
+}
+
+                $(document).ready(function () {
+                    ToggleDataList(false);
+
+
+                        @*//var _lstPartAttribute = @Html.Raw(Json.Encode(Model.lstPartAttribute));*@
+                        var _lstPartQty = @Html.Raw(Json.Encode(Model.lstPartQty));
+                    var _lstPartTransaction = @Html.Raw(serializer.Serialize(Model.lstPartTransaction));
+                    var _lstOpenRO = @Html.Raw(Json.Encode(Model.lstOpenRO));
+                     var _lstOpenSO = @Html.Raw(Json.Encode(Model.lstOpenSO));
+
+
+
+                        ////var PartAttribute = [
+                        ////    { "data": "Program", "title": "Program" },
+                        ////    { "data": "OutOfBoxWidth", "title": "Width", "width": "50px" },
+                        ////    { "data": "OutOfBoxHeight", "title": "Height", "width": "50px" },
+                        ////    { "data": "OutOfBoxLength", "title": "Length", "width": "50px" },
+                        ////    { "data": "NewInBoxWidth", "title": "Width", "width": "50px" },
+                        ////    { "data": "NewInBoxHeight", "title": "Height", "width": "50px" },
+                        ////    { "data": "NewInBoxLength", "title": "Length", "width": "50px" }
+                        ////]
+
+                    var PartQty = [
+                        { "data": "SerialFlag", "title": "SerialFlag", "width": "50px", "visible": false },
+                        { "data": "PartNo", "title": "PartNo", "width": "50px", "visible": false },
+                        { "data": "Program", "title": "Program", "width": "50px" },
+                        { "data": "LocationId", "visible": false },
+                        { "data": "LocationNo", "title": "Location", "width": "300px" },
+                        {
+                            "data": "PalletNo", "title": "Pallet No.", "width": "40px",
+                            render: function (data, type, row) {
+                                var data_replace = data;
+                                if (data_replace == '' || data_replace == null) {
+                                    data_replace = 0;
+                                }
+                                return data_replace;
+                            }
+                        },
+                        { "data": "CartonNo", "title": "Lot No.", "width": "40px" },
+                        //{ "data": "LotNo", "title": "Lot No.", "width": "70px" },
+                        { "data": "ConfigId", "visible":false },
+                        { "data": "Configuration", "title": "Configuration", "width": "80px" },
+                        {
+                            "data": "AvailQty", "title": "Qty", "width": "40px", "className": "text-right",
+                            render: function (data, type, row) {
+
+                                if (row["SerialFlag"] == 'N') {
+                                    html = row["AvailQty"];
+                                }
+                                else {
+
+                                    if (row["PalletNo"] == '' || row["PalletNo"] == null) {
+                                        row["PalletNo"] = 0;
+                                    }
+
+                                    var formId = "soDetailForm_" + row["partno"] + "_" + row["LocationId"] + "_" + row["PalletNo"] + "_" + row["ConfigId"];
+                                    var html = '<form id="' + formId + '" method="GET" action="\\SNHistory\\Index" target="_blank" style="margin:1px;">' +
+                                        '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                        '<input type="hidden" name="locationId" value="' + row["LocationId"] + '">' +
+                                        '<input type="hidden" name="palletNo" value="' + row["PalletNo"] + '">' +
+                                        '<input type="hidden" name="config" value="' + row["ConfigId"] + '">' +
+                                        '<input type="hidden" name="originFrom" value="PartsQty">' +
+                                        '<input type="hidden" name="page" value="list">' +
+                                        '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                        '</form>';
+                                }
+                                return html;
+                            }
+                        },
+                        //{ "data": "RsvdQty", "title": "Rsvd", "width": "50px", "className": "text-right" }
+                    ]
+
+                        //For Displaying  Footer Sum
+                        var footerpartQty = function () {
+                            var api = this.api();
+                            $(api.column(9).footer()).html(thousands_separators(api.column(9).data().sum()));
+                        }
+
+                    var PartTransaction = [
+                        { "data": "OrderHeaderID", "title": "OrderHeaderID", "width": "70px", "visible": false },
+                        { "data": "PartNo", "title": "Part No.", "width": "70px", "visible": false },
+                        { "data": "CreateDate", "title": "Trans. Date", "width": "90px", "className": "text-right" },
+                        { "data": "PartTransactionType", "title": "Trans. Type", "width": "140px" },
+                        { "data": "Program", "title": "Program", "width": "60px", "visible": false },
+                        {
+                            "data": "ParentSerialNo", "title": "Parent Serial No.", "width": "90px",
+                            render: function (data) {
+                                var d = data.toString();
+                                return d + "\u200C";
+                            }
+                        },
+                        {
+                            "data": "SerialNo", "title": "Serial No.", "width": "100px",
+                            render: function (data, type, row) {
+                                if (row["SerialNo"] == "*") {
+                                    html = row["SerialNo"];
+                                }
+                                else {
+                                    var formId = "partInquiryForm_" + row["SerialNo"] + "_" + row["PartNo"];
+                                    var html = '<form id="' + formId + '" method="POST" action="\\SNHistory\\Detail" target="_blank" style="margin:1px;">' +
+                                        '<input type="hidden" name="serialNo" value="' + row["SerialNo"] + '">' +
+                                        '<input type="hidden" name="partNo" value="' + row["PartNo"] + '">' +
+                                        '<input type="hidden" name="page" value="list">' +
+                                        '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                        '</form>';
+                                }
+                                return html;
+                            }
+                        },
+                        { "data": "Qty", "title": "Qty", "width": "30px", "className": "text-right" },
+                        { "data": "Source", "title": "Source", "width": "200px" },
+                        { "data": "Condition", "title": "Condition", "width": "50px" },
+                        { "data": "Configuration", "title": "Configuration", "width": "80px" },
+                        { "data": "Location", "title": "Location", "width": "400px" },
+                        { "data": "ToLocation", "title": "To Location", "width": "120px" },
+                        { "data": "Reason", "title": "Reason", "width": "120px" },
+                        { "data": "PartType", "title": "Part Type", "width": "60px" },
+                        {
+                            "data": "CustomerReference", "title": "Customer Ref.", "width": "120px",
+                            render: function (data, type, row) {
+
+                                var html;
+                                var orderType = row["OrderType"];
+                                if (orderType == "") {
+                                    var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                    var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                                        '<input type="hidden" name="ID" value="' + row["OrderHeaderID"] + '">' +
+                                        '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                        '<input type="hidden" name="page" value="list">' +
+                                        '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                        '</form>';
+                                }
+
+
+                                if (orderType == 'RO') {
+                                    var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                    var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                                        '<input type="hidden" name="ID" value="' + row["OrderHeaderID"] + '">' +
+                                        '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                        '<input type="hidden" name="page" value="list">' +
+                                        '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                        '</form>';
+                                }
+
+                                else if (orderType == 'SO') {
+
+                                    var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                    var html = '<form id="' + formId + '" method="POST" action="\\SO\\Detail" target="_blank" style="margin:1px;">' +
+                                        '<input type="hidden" name="SOHeaderId" value="' + row["OrderHeaderID"] + '">' +
+                                        '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                        '<input type="hidden" name="page" value="list">' +
+                                        '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                        '</form>';
+                                }
+
+                                else if (orderType == 'WO') {
+                                    var formId = "partInquiryForm_" + row["OrderHeaderID"] + "_" + row["CustomerReference"];
+                                    var html = '<form id="' + formId + '" method="POST" action="\\WO\\Detail" target="_blank" style="margin:1px;">' +
+                                        '<input type="hidden" name="ID" value="' + row["OrderHeaderID"] + '">' +
+                                        '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                        '<input type="hidden" name="page" value="list">' +
+                                        '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                        '</form>';
+                                }
+
+                                return html;
+                            }
+                        },
+                        { "data": "OrderType", "title": "Order Type", "width": "60px" },
+                        { "data": "Username", "title": "Created By", "width": "130px" }
+                    ]
+
+
+                        //For Displaying  Footer Sum
+                    //    var footerfunc = function () {
+                    //        var api = this.api();
+                    //        $(api.column(6).footer()).html(thousands_separators(api.column(6).data().sum()));
+                    //}
+
+                    // For Open RO
+                    var OpenRO = [
+                        { "data": "ID", "title": "ID", "width": "50px", "visible": false },
+                        {
+                            "data": "CustomerReference", "title": "Customer Ref.", "width": "200px",
+                            render: function (data, type, row) {
+                                var formId = "partInquiryForm_" + row["ID"] + "_" + row["CustomerReference"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\RO\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="Id" value="' + row["ID"] + '">' +
+                                    '<input type="hidden" name="custRef" value="' + row["CustomerReference"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                                return html;
+
+                            }
+                        },
+                        { "data": "QtyToReceive", "title": "Ordered", "width": "50px", "className": "text-right" },
+                        { "data": "QtyReceived", "title": "Rcvd", "width": "50px", "className": "text-right" },
+                        { "data": "Status", "title": "Status", "width": "70px" },
+                        { "data": "CreateDate", "title": "Created On", "width": "70px", "className": "text-right" },
+                        { "data": "LastActivityDate", "title": "Last Activity On", "width": "70px", "className": "text-right" }
+                    ]
+
+
+                    //For Displaying  Footer Sum
+                    var footerOpenRO = function () {
+                        var api = this.api();
+                        $(api.column(2).footer()).html(thousands_separators(api.column(2).data().sum()));
+                        $(api.column(3).footer()).html(thousands_separators(api.column(3).data().sum()));
+                    }
+
+                    // For Open SO
+                    var OpenSO = [
+                        { "data": "ID", "title": "ID", "width": "50px", "visible": false },
+                        {
+                            "data": "customerreference", "title": "Customer Ref.", "width": "200px",
+                            render: function (data, type, row) {
+                                var formId = "partInquiryForm_" + row["ID"] + "_" + row["customerreference"];
+                                var html = '<form id="' + formId + '" method="POST" action="\\SO\\Detail" target="_blank" style="margin:1px;">' +
+                                    '<input type="hidden" name="SOHeaderId" value="' + row["ID"] + '">' +
+                                    '<input type="hidden" name="custRef" value="' + row["customerreference"] + '">' +
+                                    '<input type="hidden" name="page" value="list">' +
+                                    '<a href="javascript:void(0)" onclick="document.getElementById(\'' + formId + '\').submit()">' + data + '</a>' +
+                                    '</form>';
+                                return html;
+
+                            }
+                        },
+                        { "data": "qtytoship", "title": "To Ship ", "width": "50px", "className": "text-right" },
+                        { "data": "qtyreserved", "title": "Rsvd", "width": "50px", "className": "text-right" },
+                        { "data": "Status", "title": "Status", "width": "70px" },
+                        { "data": "createdate", "title": "Created On", "width": "70px", "className": "text-right" },
+                        { "data": "lastactivitydate", "title": "Last Activity On", "width": "70px", "className": "text-right" }
+                    ]
+
+
+                    //For Displaying  Footer Sum
+                    var footerOpenSO = function () {
+                        var api = this.api();
+                        $(api.column(2).footer()).html(thousands_separators(api.column(2).data().sum()));
+                        $(api.column(3).footer()).html(thousands_separators(api.column(3).data().sum()));
+                    }
+
+
+                        ToggleDataList(true);
+
+
+                        // MakeDataGrid('lstPartAttribute', _lstPartAttribute, 0, PartAttribute, false, false, footerfunc, true, $('.box-title').text(), false, 'lstPA');
+
+                   // MakeMeBabyGrid('lstPartAttribute', _lstPartAttribute, 0, PartAttribute, 'button_PA', false, $('#partAttr').text(), false, 'lstPA');
+                    MakeMeBabyGridIP('lstPartQty', _lstPartQty, 0, PartQty, 'button_PQ', false, $('#partQty').text(), footerpartQty, 'lstPQ');
+                    //MakeDataGrid('lstPartTransaction', _lstPartTransaction, 190, PartTransaction, false, false, footerfunc, true, $('.box-title').text(), false, 'lstPT');
+                    //MakeMeBabyGridIP('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, 'button_PT', false, $('#partTran').text(), footerfunc, 'lstPT');
+                    //MakeDataGridIP('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, true, true);
+                    MakeMeBabyGridIP('lstOpenRO', _lstOpenRO, 0, OpenRO, 'button_RO', false, $('#OpenRO').text(), footerOpenRO, 'lstRO');
+                    MakeMeBabyGridIP('lstOpenSO', _lstOpenSO, 0, OpenSO, 'button_SO', false, $('#OpenSO').text(), footerOpenSO, 'lstSO');
+                    MakeFrameGrid('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, false, true, true, false, false, false, false);
+
+                    $(window).resize(function () {
+                        // Destroy the existing DataTable instances
+                        $('#lstPartQty').DataTable().destroy();
+                        $('#lstOpenRO').DataTable().destroy();
+                        $('#lstOpenSO').DataTable().destroy();
+                        $('#lstPartTransaction').DataTable().destroy();
+                        MakeMeBabyGridIP('lstPartQty', _lstPartQty, 0, PartQty, 'button_PQ', false, $('#partQty').text(), footerpartQty, 'lstPQ');
+                        MakeMeBabyGridIP('lstOpenRO', _lstOpenRO, 0, OpenRO, 'button_RO', false, $('#OpenRO').text(), footerOpenRO, 'lstRO');
+                        MakeMeBabyGridIP('lstOpenSO', _lstOpenSO, 0, OpenSO, 'button_SO', false, $('#OpenSO').text(), footerOpenSO, 'lstSO');
+                        MakeFrameGrid('lstPartTransaction', _lstPartTransaction, 0, PartTransaction, false, true, true, false, false, false, false);
+                    });
+                });
+                function MakeFrameGrid(tableId, data, tableHeight, columns, buttonId, search, isScrollX, footerFunction, isFramed, reportTitle, isSqlDoc, showPaging) {
+                    var isFooter = footerFunction === undefined || footerFunction === false ? false : true;
+                    isFramed = isFramed === undefined || isFramed === false ? false : true;
+                    isScrollX = isScrollX === undefined ? false : true;
+                    if (search === undefined) { search = true; }
+                    reportTitle = reportTitle === undefined ? $('.box-title').text() : reportTitle;
+                    showPaging = showPaging === undefined ? true : false;
+
+                    var gridHeight = 0;
+                    var gridButtonsClass = '';
+                    //var gridButtonSize = 0;
+                    gridButtonsClass = 'btn-header btn-box-tool';
+                    gridSearchBoxClass = 'bg-white';
+                    gridButtonSize = 20;
+
+                    //var layoutHeader = $('nav').innerHeight();
+                    var topHeader = $('#topHeader').innerHeight();
+                    var cardHeader = $('.box-header').innerHeight();
+                    // var canvas = $('.canvas').innerHeight();
+                    //var tableHeader = $('#' + tableId + ' > thead').innerHeight();
+                    var babygridheight = $('.babygridheight').innerHeight();
+                    var tableFooter = 40;
+                    var cardFooterH = 40;
+
+                    if (showPaging)
+                        cardFooterH = 50;
+
+                    //if (isFooter === true)
+                    //    tableFooter = 24;
+
+
+                    var browserHeight = window.innerHeight;
+                    tableFooter = tableFooter === undefined ? 0 : tableFooter;
+                    gridHeight = browserHeight - (topHeader + cardHeader + cardHeader + babygridheight + tableFooter + cardFooterH);
+
+
+                    //For SQL Documentation
+                    var boxtool;
+                    if (search === true) {
+                        if (isFramed) {
+                            $('#trHeadSearch').empty();
+                            boxtool = '<input class="txtSearch-frame" id="txtFrameSearch" type="text" placeholder="Search.." style="padding-left: 10px !important;" >';
+                            $('#trHeadSearch').append(boxtool);
+                        }
+                        else {
+                            $('#' + buttonId).empty();
+                            if (isSqlDoc === true)
+                                AddSqlDoc(buttonId);
+                            boxtool = '<input class="txtSearch-frame" id="txtFrameSearch' + tableId + '" type="text" placeholder="Search.." style="padding-left: 10px !important;" >';
+                            $('#' + buttonId).append(boxtool);
+                        }
+                    }
+                    else {
+                        if (isFramed) {
+                            $('#trHeadSearch').empty();
+                            boxtool = '<input class="txtSearch-frame" id="txtFrameSearch" type="text" placeholder="Search.." style="padding-left: 10px !important;" >';
+                            $('#trHeadSearch').append(boxtool);
+                        }
+                        else {
+                            $('#' + buttonId).empty();
+                            if (isSqlDoc === true)
+                                AddSqlDoc(buttonId);
+                        }
+                    }
+
+                    var table = $('#' + tableId).DataTable({
+                        order: [],
+                        data: data,
+                        destroy: true,
+                        columns: columns,
+                        bInfo: showPaging,
+                        paging: showPaging,
+                        ordering: true,
+                        searching: search,
+                        deferRender: true,
+                        pagingType: 'full',
+                        pageLength: 100,
+                        scrollCollapse: false,
+                        scrollX: isScrollX,
+                        scrollY: gridHeight,
+                        footerCallback: footerFunction,
+                        language: {
+                            emptyTable: "<p style=\"text-align:left;\">No record(s) found.</p>",
+                            zeroRecords: "<p style=\"text-align:left;\">No matching record(s) found</p>",
+                            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                            oPaginate: {
+                                sNext: '<i class="fa fa-forward"></i>',
+                                sPrevious: '<i class="fa fa-backward"></i>',
+                                sFirst: '<i class="fa fa-step-backward"></i>',
+                                sLast: '<i class="fa fa-step-forward"></i>'
+                            }
+                        },
+                        "dom": "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-5'i><'#designedBy.col-sm-3'><'col-sm-4'p>>", // Added By Tahir
+                        buttons: [
+                            {
+                                extend: 'copyHtml5',
+                                footer: true,
+                                text: '<span><span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: rgb(244, 164, 37);"></i><i class="fa fa-copy fa-stack-1x" style="color: white;"></i></span></span>',
+                                titleAttr: 'Copy',
+                                title: reportTitle,
+                                filename: 'DataExport',
+                                exportOptions: {
+                                    columns: 'th:not(.notexport)'
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true,
+                                text: '<span><span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: rgb(0, 179, 98);"></i><i class="fa fa-file-excel fa-stack-1x" style="color: white;"></i></span></span>',
+                                titleAttr: 'Export to excel',
+                                title: reportTitle,
+                                filename: 'DataExport',
+                                exportOptions: {
+                                    columns: 'th:not(.notexport)'
+                                },
+                                customize: function (xlsx) {
+                                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                    var excelColumns = [];
+
+                                    header = $("row[r=2]", sheet);
+
+                                    cols = header.find("c");
+                                    cols.each(function () {
+                                        t = $(this).find("t").text();
+                                        if (t.includes("Serial") || t.includes("Customer Ref."))
+                                            excelColumns.push($(this).attr("r"));
+                                    });
+                                    $(excelColumns).each(function () {
+                                        var cell = this.substring(0, 1);
+                                        $('row:gt(1) c[r^="' + cell + '"]', sheet).each(function () {
+                                            $(this).removeAttr('s');
+                                            $(this).attr('t', 'inlineStr');
+                                            $(this).find('v').replaceWith('<is><t>' + $(this).text() + '</t></is>');
+                                        });
+                                    });
+
+                                }
+                            },
+                            {
+                                extend: 'print',
+                                footer: true,
+                                text: '<span><span class="fa-stack"><i class="fa fa-circle fa-stack-2x" style="color: rgb(0, 204, 255);"></i><i class="fa fa-print fa-stack-1x" style="color: white;"></i></span></span>',
+                                titleAttr: 'Print',
+                                title: '',
+                                messageTop: function () { return '<h4>' + reportTitle + '</h4>'; },
+                                filename: 'DataExport',
+                                exportOptions: {
+                                    columns: 'th:not(.notexport)'
+                                }
+                            }
+
+                        ],
+                        select: true
+                    });
+
+                    table.buttons().container()
+                        .appendTo('#' + buttonId);
+
+                    table.button(0).nodes().removeClass('btn btn-default buttons-copy buttons-html5');
+                    table.button(0).nodes().addClass(gridButtonsClass);
+
+                    table.button(1).nodes().removeClass('btn btn-default buttons-excel buttons-html5');
+                    table.button(1).nodes().addClass(gridButtonsClass);
+
+                    table.button(2).nodes().removeClass('btn btn-default buttons-excel buttons-html5');
+                    table.button(2).nodes().addClass(gridButtonsClass);
+
+                    $('#txtFrameSearch' + tableId).on('keyup change', function () {
+                        table.search(this.value).draw();
+                    });
+                    $('.dataTables_filter').hide();
+                    table.columns.adjust().draw();
+
+                }
+            </script>
+
+        }
+    }
+}
