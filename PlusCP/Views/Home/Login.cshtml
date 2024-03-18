@@ -3,425 +3,243 @@
 @model PlusCP.Models.cAuth
 @{
     ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    Layout = null;
 }
 
 
-<link href="~/Content/css/login.css" rel="stylesheet" />
+@*<link href="~/Content/css/login.css" rel="stylesheet" />*@
 <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
 <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style>
-    .modal-header-login {
-        background-color: white !important;
-        color: white !important;
+    /* Global Variables */
+    :root {
+        --color1: #f5f5f54d;
+        --color2: #526470;
+        --color2Hover: #013e63;
+        --color3: #fff;
+        --color4: #015981eb;
+        --color5: #b2bec5c2;
     }
 
-    .tealColor {
-        background-color: #00b3b3;
-        color: white;
-    }
-
-    .green {
-        background-color: #44B254;
-    }
-
-    .blue {
-        background-color: #325FAB;
-    }
-
-    #slideshow {
-        margin: 0 auto;
-        padding-top: 50px;
-        height: 700px;
-        width: 100%;
+    /* Reset Default Settings */
+    * {
         box-sizing: border-box;
+        margin: 0;
     }
 
-    .content {
-        margin: auto;
-        width: 190px;
-        perspective: 1000px;
+    body {
+        background-color: #c8dae9;
+        min-height: 100vh;
+        font-family: 'Montserrat', sans-serif;
+        /* Flex */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        background-color: var(--color3);
+        width: 750px;
+        height: 450px;
+        border-radius: 60px;
+        overflow: hidden;
+        /* Flex */
+        display: flex;
+        padding-left:0px!important;
+    }
+
+    .container__svgs {
+        background-color: #002244;
+        width: 50%;
+        /* Flex */
+        display: flex;
+        /*        flex-direction: column;*/
+        justify-content: center;
+        align-items: center;
+        border-radius: 60px !important;
+    }
+
+    .container__svg1 {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 10px;
+    }
+
+    .container__svg2 {
+        width: 170px;
+        height: 18px;
+    }
+
+    .container__content {
+        width: 50%;
         position: relative;
-        padding-top: 80px;
+        /* Flex */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
-
-    .content-carrousel {
-        width: 100%;
-        position: absolute;
-        float: right;
-        animation: rotar 40s infinite linear;
-        transform-style: preserve-3d;
+    .container__form {
+        margin-bottom: 15px;
+        /* Flex */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
-        .content-carrousel:hover {
-            animation-play-state: paused;
-            cursor: pointer;
-        }
-
-
-        .content-carrousel figure {
-            width: 100%;
-            height: 120px;
-            border: 1px solid #4d444d;
-            overflow: hidden;
-            position: absolute;
-        }
-
-    .slideshow-title {
-        font-family: 'Allerta Stencil';
-        font-size: 62px;
-        color: #fff;
-        margin: 0 auto;
-        text-align: center;
-        margin-top: 25%;
-        letter-spacing: 3px;
-        font-weight: 300;
-    }
-
-    .sub-heading {
-        padding-top: 50px;
-        font-size: 18px;
-    }
-
-    .sub-heading-two {
+    .container__inputField {
+        background-color: transparent;
+        width: 220px;
+        padding: 0 0 10px 5px;
         font-size: 15px;
+        letter-spacing: 1px;
+        /* Border */
+        border: none;
+        border-bottom: solid 1px var(--color2);
+        border-radius: 0;
     }
 
-    .sub-heading-three {
-        font-size: 13px;
+        .container__inputField:first-of-type {
+            margin-bottom: 35px;
+        }
+
+        .container__inputField:nth-of-type(2) {
+            margin-bottom: 40px;
+        }
+
+        .container__inputField:focus-visible {
+            border-bottom: solid 2px var(--color2Hover);
+            outline: none;
+        }
+
+    .container__sumbitButton {
+        background-color: white;
+        color: black;
+        width: 220px;
+        padding: 15px 0;
+        font-size: 14px;
+        cursor: pointer;
+        /* Text */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        /* Border */
+        border: none;
+        border-radius: 50px;
+        margin-top: 10px !important;
     }
 
-    .sub-heading-four {
-        font-size: 11px;
-    }
+        .container__sumbitButton:hover {
+            background-color: #c8dae9;
+        }
 
-    .sub-heading-five {
-        font-size: 9px;
-    }
-
-    .sub-heading-six {
-        font-size: 7px;
-    }
-
-    .sub-heading-seven {
-        font-size: 5px;
-    }
-
-    .sub-heading-eight {
-        font-size: 3px;
-    }
-
-    .sub-heading-nine {
-        font-size: 1px;
-    }
-
-    .entire-content {
-        margin: auto;
-        width: 190px;
-        perspective: 1000px;
-        position: relative;
-        padding-top: 80px;
-    }
-
-    .content-carrousel figure:nth-child(1) {
-        transform: rotateY(0deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(2) {
-        transform: rotateY(40deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(3) {
-        transform: rotateY(80deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(4) {
-        transform: rotateY(120deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(5) {
-        transform: rotateY(160deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(6) {
-        transform: rotateY(200deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(7) {
-        transform: rotateY(240deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(8) {
-        transform: rotateY(280deg) translateZ(300px);
-    }
-
-    .content-carrousel figure:nth-child(9) {
-        transform: rotateY(320deg) translateZ(300px);
-    }
-
-    .shadow {
+    .container__links {
+        /* Position */
         position: absolute;
-        box-shadow: 0px 0px 20px 0px #000;
-        border-radius: 2px;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        /* Flex */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 300px !important;
     }
 
-    .content-carrousel img {
-        image-rendering: auto;
-        transition: all 300ms;
-        width: 100%;
-        height: 100%;
+    .container__link {
+        color: var(--color2);
+        font-size: 12px;
+        text-decoration: none;
     }
 
-        .content-carrousel img:hover {
-            transform: scale(1.2);
-            transition: all 300ms;
+        .container__link:hover {
+            text-decoration: underline;
         }
 
-    @@keyframes rotar {
-        from {
-            transform: rotateY(0deg);
-        }
-
-        to {
-            transform: rotateY(360deg);
-        }
-    }
-
-    /*.modal-header {
-        cursor: move;
-    }*/
-
-    div.background {
-        background: url(klematis.jpg) repeat;
-        border: 2px solid black;
-    }
-
-    div.transbox {
-        margin: 30px;
-        background-color: #ffffff;
-        border: 1px solid black;
-        opacity: 0.6;
-        filter: alpha(opacity=60); /* For IE8 and earlier */
-    }
-
-        div.transbox p {
-            margin: 5%;
-            font-weight: bold;
-            color: #000000;
-        }
-
-    .modal {
-        text-align: center;
-        padding: 0 !important;
-    }
-
-        .modal:before {
-            content: '';
-            display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-            margin-right: -4px;
-        }
-
-    .modal-dialog {
-        display: inline-block;
-        text-align: left;
-        vertical-align: middle;
-    }
-
-    .button {
-        background-color: #47AE50;
-        color: white;
-        border-radius: 3px;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        border: 1px solid transparent;
-        display: inline-block;
-        padding: 6px 12px;
-        margin-bottom: 2px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        -ms-touch-action: manipulation;
-        touch-action: manipulation;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent;
-        border-radius: 4px;
-    }
-
-
-    .button2 {
-        background-color: #325FAB;
-        color: white;
-        border-radius: 3px;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        border: 1px solid transparent;
-        display: inline-block;
-        padding: 6px 12px;
-        margin-bottom: 2px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        -ms-touch-action: manipulation;
-        touch-action: manipulation;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent;
-        border-radius: 4px;
-    }
-
-    .header {
-        background-color: #325FAB;
-        color: white;
-        text-align: center;
-    }
-
-    .modal-dialog {
-        align-self: center;
-        padding-left: 10%;
-    }
-
-    .SeaGreenColor {
-        color: #00b3b3;
-    }
-
-
-    .forgotColor {
-        background-color: lightgray;
-    }
-
-    #name:focus {
-    }
-
-    html.Captcha {
-        background-color: lightgray;
+    .container__separator {
+        background-color: var(--color2);
+        width: 1px;
+        height: 10px;
+        margin: 0 15px;
     }
 </style>
-
-<body id="mainDiv">
+<body>
     @using (Html.BeginForm("Login", "Home"))
     {
-        <!-- Modal HTML -->
         <div style="padding-top:1px;">
             @*<button type="button" class="btn btn-success btn pull-right" style="margin-left:5px; margin-right:60px;">My Clover</button>
-                <button type="button" class="btn btn-primary btn pull-right" style="margin-left:100px;">Heaven</button>*@
-            <div>
-                <a href="http://reconext.com/" target="_blank"><img src="~/Content/Images/SRMLogo.png" style=" margin-left:8px;margin-top:6px; height:40px; margin-bottom:3px;" /></a>
-            </div>
-            <div class="example3">
-                <nav class="navbar" style="background-color:#325FAB; border:0px; min-height: 4px; margin-top:4px;">
-                    <div class="container">
-                        <div class="navbar-header">
-
-                        </div>
-                    </div>
-                </nav>
+                <button otype="button" class="btn btn-primary btn pull-right" style="margin-left:100px;">Heaven</button>*@
+            <div class="text-center">
+                <a href="http://reconext.com/" target="_blank"><img src="~/Content/Images/SRMLogo.png" style=" margin-left:8px;margin-top:6px; height:70px; margin-bottom:3px;" /></a>
             </div>
         </div>
-        <div class="col-sm-2" style="margin-top:-100px; width:40px; margin-right:150px">
-            <div>
-                <div id="modalLogin" class="modal-dialog modal-login">
-                    <div class="modal-content" style="height:630px;">
-                        <div class="modal-header-login">
-                            <h4 class="modal-title">Sign In</h4>
-                        </div>
-                        <div class="modal-body">
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    @Html.TextBoxFor(model => model.SigninId, htmlAttributes: new
-                                    {
-                                        @autofocus = "autofocus",
-                                        @class = "form-control",
-                                        @placeholder = "Username",
-                                        @id = "txtUserName",
-                                        pattern = "^[a-zA-Z0-9-_@.]+$",
-                                   oninvalid = "this.setCustomValidity('User is invalid')",
-                                   oninput = "this.setCustomValidity('')"
-                                    })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                    @Html.PasswordFor(model => model.Password, htmlAttributes: new { @class = "form-control", @placeholder = "Password", @id = "txtPwd" })
-                                    @Html.ValidationMessageFor(model => model.Password)
-                                </div>
-                            </div>
-                            <div align="center">
-
-                                @Html.Captcha(5)
-                            </div>
-
-                            <div style="font-size:12px; margin-top:8px;">
-
-                            </div>
-
-                            <div class="form-group">
-                                <button id="btnSubmit" type="submit" class="btn btn-md btn-block button">Sign In</button>
-                                <button type="button" class="btn btn-md btn-block button2" data-toggle="modal" data-target="#exampleModalCenter">
-                                    Signup
-                                </button>
-                            </div>
-
-                            @*<div class="form-group">                         
-                               
-                            </div>*@
-                            <div style="text-align:right; font-size:12px;">
-                                <a data-toggle="modal" href="#myModal">Forgot Password?</a>
-                            </div>
-                            <label id="lblMsg" class="optionMsg" style="font-size:13px;">
-                                @ViewBag.ErrorMessage
-                            </label>
-                            @*<div>
-                                    <p style="font-size:10px;  margin-top:90px; position:fixed; bottom:35px;">
-                                    Copyright @DateTime.Now.Year © Reconext, All Rights Reserved
-                                    </p>
-                                </div>*@
-                        </div>
-                        <div class="modal-footer" style="font-size: 12px; margin-top: 23px; border-top: none;">
-                            Copyright @DateTime.Now.Year © SRM, All Rights Reserved
-                        </div>
-                    </div>
-
+        <div class='container'>
+            <div class='container__svgs'>
+                <div>
+                  <h2 style="color:white;">Click here to Sign Up</h2>
+                    <button type="button" class="container__sumbitButton" data-toggle="modal" data-target="#exampleModalCenter">
+                        Sign Up
+                    </button>
+                    @*<input type='submit' value='Signup' class='container__sumbitButton'>*@
                 </div>
 
             </div>
 
-        </div>
-        <div class="col-sm-2">
+            <div class='container__content'>
+                <div class='container__form'>
+                    @Html.TextBoxFor(model => model.SigninId, htmlAttributes: new
+               {
+                   @autofocus = "autofocus",
+                   @class = "container__inputField",
+                   @placeholder = "Username",
+                   @id = "txtUserName",
+                   pattern = "^[a-zA-Z0-9-_@.]+$",
+                   oninvalid = "this.setCustomValidity('User is invalid')",
+                   oninput = "this.setCustomValidity('')"
+               })
+                    @* <input type='text' name='username' placeholder='Username' class='container__inputField'>*@
+
+                    @Html.PasswordFor(model => model.Password, htmlAttributes: new
+                    {
+                        @class = "container__inputField",
+                    @placeholder = "Password",
+                    @id = "txtPwd"
+               })
+                    @Html.ValidationMessageFor(model => model.Password)
+                    @* <input type='password' name='password' placeholder='Password' class='container__inputField'>*@
+                    <div align="center" style="margin-top: -30px !important;">
+
+                        @Html.Captcha(5)
+                    </div>
+                    <button id="btnSubmit" type="submit" class="container__sumbitButton mt-2">Sign In</button>
+
+                    @*<input type='submit' value='Login' class='container__sumbitButton'>*@
+                </div>
+                <div class='container__links'>
+                    <a href='#emptyLink' class='container__link'>Need Account?</a>
+                    <span class='container__separator'></span>
+                    <a href='#myModal' data-toggle="modal" class='container__link'>Forget Password?</a>
+                </div>
+            </div>
         </div>
 
-        <!-- Modal -->
-        <div class="modal bd-example-modal-sm" tabindex="-1" id="myModal" role="dialog">
+
+
+        //Forgot Passoword Modal
+
+        <div class="modal bd-example-modal-sm" tabindex="-1" id="myModal" role="dialog" style=" top: 25%; left: 25%;">
             <div class="modal-dialog">
 
                 <!-- Modal content-->
                 <div class="modal-content modal-sm">
-                    <div class="header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Forgot Password</h4>
+                    <div class="header" style="background-color: var(--color4);
+">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white;">&times;</button>
+                        <h4 class="modal-title" style="color:white;text-align:center;">Forgot Password</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -435,7 +253,7 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button id="btnSend" type="button" class="button">Reset Password</button>
+                        <button id="btnSend" type="button" class="button" style="background-color: var(--color4);color:white;">Reset Password</button>
                         <button id="btnCancel" data-dismiss="modal" class="cancel btn btn-default">Close</button>
                     </div>
                     <div class="optionMsg" style="text-align:center;height:20px;">
@@ -446,30 +264,49 @@
             </div>
         </div>
 
-        <!-- Modal Signup-->
-        <!-- Button trigger modal -->
-       
 
-        <!-- Modal -->
+
+
+
+        //Signup Modal
+
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Sign Up</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="modal-header signup-header">
+                        <h3 class="modal-title text-center" id="exampleModalCenterTitle">Sign Up</h3>
+
                     </div>
+
+
                     <div class="modal-body">
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                @Html.TextBoxFor(model => model.SigninId, htmlAttributes: new
+                                @Html.TextBoxFor(model => model.FirstName, htmlAttributes: new
                                 {
                                     @autofocus = "autofocus",
                                     @class = "form-control",
-                                    @placeholder = "Username",
-                                    @id = "txtUserName",
+                                    @placeholder = "FirstName",
+                                    @id = "FirstName",
+                                    pattern = "^[a-zA-Z0-9-_@.]+$",
+                               oninvalid = "this.setCustomValidity('User is invalid')",
+                               oninput = "this.setCustomValidity('')"
+                                })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                @Html.TextBoxFor(model => model.LastName, htmlAttributes: new
+                                {
+                                    @autofocus = "autofocus",
+                                    @class = "form-control",
+                                    @placeholder = "LastName",
+                                    @id = "LastName",
                                     pattern = "^[a-zA-Z0-9-_@.]+$",
                                oninvalid = "this.setCustomValidity('User is invalid')",
                                oninput = "this.setCustomValidity('')"
@@ -479,8 +316,11 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                                @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new
-                           { @class = "form-control",
+                                @Html.EditorFor(model => model.EmailAddress, new
+                                {
+                                    htmlAttributes = new
+                           {
+                                        @class = "form-control",
                                @placeholder = "Email",
                                @id = "email",
                                pattern = "^[a-zA-Z0-9-_@.]+$",
@@ -495,18 +335,18 @@
                                 @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                @Html.PasswordFor(model => model.Password, htmlAttributes: new { @class = "form-control", @placeholder = "Password", @id = "txtPwd" })
+                                @Html.PasswordFor(model => model.Password, htmlAttributes: new { @class = "form-control", @placeholder = "Password", @id = "Pwd" })
                                 @Html.ValidationMessageFor(model => model.Password)
                             </div>
                         </div>
-                          <div class="form-group">
+                        <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                @Html.PasswordFor(model => model.Password, htmlAttributes: new { @class = "form-control", @placeholder = "Confirm Password", @id = "txtPwd" })
+                                @Html.PasswordFor(model => model.Password, htmlAttributes: new { @class = "form-control", @placeholder = "Confirm Password", @id = "CnfrmPwd" })
                                 @Html.ValidationMessageFor(model => model.Password)
                             </div>
                         </div>
@@ -515,14 +355,17 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-green" id="Signup" data-dismiss="modal">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
     }
-
 </body>
+
+
+
+
 
 
 <script>
@@ -616,6 +459,47 @@
                 }
             });
         }
+    });
+
+
+    ///Signup
+
+    $("#Signup").click(function () {
+
+
+            //$('#ProgramId').text('');
+        var FirstName = $('#FirstName').val();
+        var LastName = $('#LastName').val();
+        var EmailAddress = $('#email').val();
+        var Pwd = $('#Pwd').val();
+        var CnfrmPwd = $('#CnfrmPwd').val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("SignupVerification", "Home")',
+                data: {
+                    FirstName: FirstName,
+                    LastName: LastName,
+                    EmailAddress: EmailAddress,
+                    Pwd: Pwd,
+                    CnfrmPwd: CnfrmPwd
+                },
+                datatype: JSON,
+                success: function (data) {
+
+                    $('#lblMsgEmail').empty();
+                    if (data.EmailMessage == "Email sent.") {
+                        $('#lblMsgEmail').append(data.EmailMessage);
+                        $('#lblMsgEmail').addClass('SeaGreenColor');
+
+                    }
+                    else {
+                        $('#lblMsgEmail').append(data.EmailMessage);
+                        $('#lblMsgEmail').removeClass('SeaGreenColor');
+                        $("#btnSend").attr("disabled", false).removeClass('forgotColor');
+                    }
+                }
+            });
+
     });
 
     $('#myModal').on('hidden.bs.modal', function () {

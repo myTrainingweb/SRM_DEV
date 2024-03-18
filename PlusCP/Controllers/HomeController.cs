@@ -9,6 +9,14 @@ using IP.Classess;
 using CaptchaMvc.HtmlHelpers;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PlusCP.Controllers
 {
@@ -278,17 +286,17 @@ namespace PlusCP.Controllers
                 return RedirectToAction("Index");
             }
         }
-        public JsonResult GetMenus(string ProgramId, string program)
+        public JsonResult GetMenus()
         {
             oHome = new Home();
-            string[] parts = program.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-            string programName = parts[0].Trim();
-            Session["ProgramName"] = programName;
-            string defaultSite = parts[1].Trim();
-            Session["DefaultSite"] = defaultSite; //For Inbound Report Model Summary Method
+            //string[] parts = program.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            //string programName = parts[0].Trim();
+            //Session["ProgramName"] = programName;
+            //string defaultSite = parts[1].Trim();
+            //Session["DefaultSite"] = defaultSite; //For Inbound Report Model Summary Method
 
-            String isadmin = Session["isAdmin"].ToString();
-            oHome.GetMenus(Session["SigninId"].ToString(), isadmin, programName);
+            //String isadmin = Session["isAdmin"].ToString();
+            //oHome.GetMenus(Session["SigninId"].ToString(), isadmin, programName);
             return Json(oHome.webMnu, JsonRequestBehavior.AllowGet);
         }
 
@@ -461,6 +469,91 @@ namespace PlusCP.Controllers
             oLog.UpdateLog(gridExecTime, recNo, rptUrl);
 
             return new EmptyResult();
+        }
+
+        public JsonResult SignupVerification(string FirstName, string LastName, string EmailAddress, string Pwd, string CnfrmPwd)
+        {
+            cAuth oAuth = new cAuth();
+            string tokenId = Guid.NewGuid().ToString("N").Substring(0, 10); // Take the first 10 characters
+            oAuth.UserVerified(tokenId, FirstName, LastName, EmailAddress, Pwd);
+
+
+            // Sender's email address and password
+            string senderEmail = "yousufdev4@gmail.com";
+            string senderPassword = "qvav wxwd wcho wofj";
+
+            //string userName = "mohsin";
+            var subject = "Email Verification";
+            // Recipient's email address
+            string recipientEmail = EmailAddress;
+
+            // SMTP server settings (e.g., for Gmail)
+            string smtpHost = "smtp.gmail.com";
+            int smtpPort = 587; // Port 587 for Gmail SMTP
+            bool enableSsl = true;
+
+            // Create a new MailMessage
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail);
+            mailMessage.Subject = subject;
+            mailMessage.IsBodyHtml = true;
+
+
+            //URL
+            string Baseurl = @"http://localhost:61844/Externals/EmailVerification.aspx?Id=" + tokenId;
+
+            // HTML body containing the form
+            string htmlBody = $@"<!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Email Verification</title>
+                            </head>
+                            <body>
+                                <h2>Click here to verify your email.</h2>
+                                <p>
+                                    <a href=""<URL>"" target=""_blank"">Click here to verify your email.</a>
+                                </p>
+                            </body>
+                            </html>";
+
+            htmlBody = htmlBody.Replace("<FirstName>", FirstName);
+            htmlBody = htmlBody.Replace("<LastName>", LastName);
+            htmlBody = htmlBody.Replace("<EmailAddress>", EmailAddress);
+            htmlBody = htmlBody.Replace("<Pwd>", Pwd);
+            htmlBody = htmlBody.Replace("<CnfrmPwd>", CnfrmPwd);
+            htmlBody = htmlBody.Replace("<URL>", Baseurl);
+
+            mailMessage.Body = htmlBody;
+
+            // Create a SmtpClient instance
+            SmtpClient smtpClient = new SmtpClient(smtpHost, smtpPort);
+            smtpClient.EnableSsl = enableSsl;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            try
+            {
+                // Send the email
+                smtpClient.Send(mailMessage);
+                oAuth.SendEmailVerification(FirstName, LastName, senderEmail, EmailAddress, subject, htmlBody);
+                Console.WriteLine("Email sent successfully!");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Some Error";
+            }
+
+            var jsonResult = Json("Send", JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+
+
+            return jsonResult;
+        }
+
+        public JsonResult IsVerified(string tokenId, string IsVerified)
+        {
+            cAuth oAuth = new cAuth();
+            oAuth.IsVerified(tokenId, IsVerified);
+            return Json(oAuth.Message, JsonRequestBehavior.AllowGet);
         }
     }
 }

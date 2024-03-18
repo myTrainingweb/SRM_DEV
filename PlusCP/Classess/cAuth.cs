@@ -363,5 +363,67 @@ namespace PlusCP.Models
 
         }
 
+        public void SendEmailVerification(string FirsthName, string LastName, string senderEmail, string EmailAddress, string subject, string htmlBody)
+        {
+            cDAL oDAL = new cDAL(cDAL.ConnectionType.ACTIVE);
+            string sql = @"INSERT INTO [dbo].[UserEmail]
+           ([Sender]
+           ,[Receiver]
+           ,[Subject]
+           ,[Body])
+     VALUES
+           ('<Sender>'
+           ,'<Receiver>'
+           ,'<Subject>'
+           ,'<Body>')";
+
+            sql = sql.Replace("<Sender>", senderEmail);
+            sql = sql.Replace("<Receiver>", EmailAddress);
+            sql = sql.Replace("<Subject>", subject);
+            sql = sql.Replace("<Body>", htmlBody);
+
+
+            oDAL.Execute(sql);
+        }
+
+        public void UserVerified(string tokenId, string FirstName, string LastName, string EmailAddress, string Pwd)
+        {
+            cDAL oDAL = new cDAL(cDAL.ConnectionType.ACTIVE);
+
+            string sql = @"INSERT INTO [SRM].[UserInfo]
+    ([FirstName], [LastName], [Password], [isEmailVerified], [Email], [CreatedOn],[tokenId])
+    VALUES
+    ('<FirstName>', '<LastName>', '<Pwd>', '0', '<Email>', GETDATE(), '" + tokenId + "')";
+
+            sql = sql.Replace("<FirstName>", FirstName);
+            sql = sql.Replace("<LastName>", LastName);
+            sql = sql.Replace("<Pwd>", Pwd);
+            sql = sql.Replace("<Email>", EmailAddress);
+
+
+
+            oDAL.Execute(sql);
+        }
+
+        public void IsVerified(string tokenId, string IsVerified)
+        {
+
+            cDAL oDAL = new cDAL(cDAL.ConnectionType.ACTIVE);
+            //          string query = @"SELECT  UserId
+            //    ,[FirstName]
+            //    ,[LastName]
+            //    ,[Email]
+            //FROM [TazeenSRM].[SRM].[UserInfo] WHERE UserId = '" + HttpContext.Current.Session["SigninId"] + "'";
+
+            //          DataTable dtuser = oDAL.GetData(query);
+            //          if (dtuser.Rows.Count > 0)
+            //          {
+            //              userId = dtuser.Rows[0]["UserId"].ToString();
+            //          }
+            string sql = @"UPDATE SRM.UserInfo SET isEmailVerified = 1 where tokenId = '" + tokenId + "'";
+
+            oDAL.Execute(sql);
+        }
+
     }
 }

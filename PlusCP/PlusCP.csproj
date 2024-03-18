@@ -214,6 +214,13 @@
     <Compile Include="Externals\OutboundDocs.aspx.designer.cs">
       <DependentUpon>OutboundDocs.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Externals\EmailVerification.aspx.cs">
+      <DependentUpon>EmailVerification.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Externals\EmailVerification.aspx.designer.cs">
+      <DependentUpon>EmailVerification.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Externals\VendorPOEmail.aspx.cs">
       <DependentUpon>VendorPOEmail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -279,6 +286,7 @@
     <Content Include="Content\css\login.css" />
     <Content Include="Content\css\MyDataGrid.css" />
     <Content Include="Content\css\responsive-tables.min.css" />
+    <Content Include="Content\css\sb-admin-2.min.css" />
     <Content Include="Content\css\scroller.dataTables.css" />
     <Content Include="Content\css\Site.css" />
     <Content Include="Content\css\Standards.css" />
@@ -349,18 +357,23 @@
     <Content Include="Externals\B2BMessage.aspx" />
     <Content Include="Externals\ChangePassword.aspx" />
     <Content Include="Externals\OutboundDocs.aspx" />
+    <Content Include="Externals\EmailVerification.aspx" />
     <Content Include="Externals\VendorPOEmail.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\adminlte.js" />
     <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\buttons.bootstrap.min.js" />
     <Content Include="Scripts\buttons.colVis.min.js" />
     <Content Include="Scripts\buttons.html5.min.js" />
     <Content Include="Scripts\buttons.print.min.js" />
+    <Content Include="Scripts\chart-area-demo.js" />
+    <Content Include="Scripts\chart-pie-demo.js" />
     <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\ChartBundle.js" />
     <Content Include="Scripts\chartCommon.js" />
     <Content Include="Scripts\ChartJsLabeling.js" />
@@ -381,12 +394,14 @@
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery.bootstrap.newsbox.min.js" />
+    <Content Include="Scripts\jquery.easing.min.js" />
     <Content Include="Scripts\jquery.gridster.js" />
     <Content Include="Scripts\jquery.idle-timer.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.responsive-tables.min.js" />
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\pdfmake.min.js" />
+    <Content Include="Scripts\sb-admin-2.min.js" />
     <Content Include="Scripts\timeout-dialog.js" />
     <Content Include="Scripts\Utility.js" />
     <Content Include="Scripts\vfs_fonts.js" />
@@ -482,6 +497,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\PO\SupplierUpdate.cshtml" />
     <Content Include="Views\Shared\_LayoutDetail.cshtml" />
+    <Content Include="Views\Shared\_LayoutDashboard.cshtml" />
+    <Content Include="Views\Dashboard\IndexDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

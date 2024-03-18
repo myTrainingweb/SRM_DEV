@@ -474,13 +474,13 @@ WHERE W.WidgetStatus = 1 AND E.EmpId = @EMP_ID
             //string epic_company = HttpContext.Current.Session["CompanyCode"].ToString();
             //string epic_plant = HttpContext.Current.Session["CompanyPlant"].ToString();
             int employee_id = Convert.ToInt32(HttpContext.Current.Session["SigninId"]);
-            string PrgramName = HttpContext.Current.Session["ProgramName"].ToString();
+            //string PrgramName = HttpContext.Current.Session["ProgramName"].ToString();
             //string win_login = HttpContext.Current.Session["LogonUser"].ToString();
 
             //query = query.Replace("@Company", "'" + epic_company + "'");
             //query = query.Replace("@Plant", "'" + epic_plant + "'");
             query = query.Replace("@EmpId", "'" + employee_id.ToString() + "'");
-            query = query.Replace("@ProgramName", "'" + PrgramName + "'");
+            //query = query.Replace("@ProgramName", "'" + PrgramName + "'");
             //query = query.Replace("@WinLogin", "'" + win_login + "'");
             //query = query.Replace("\r\n", "");
             return query;
